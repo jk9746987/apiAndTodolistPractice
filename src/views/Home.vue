@@ -36,64 +36,85 @@
           "
         >
           <div class="container d-flex align-center" v-if="login">
-            <div class="login_container mx-auto">
+            <div class="form_container mx-auto">
               <div class="mb-4 text-h5 title text-center col-12">
                 線上代辦事項紀錄
               </div>
-              <v-text-field
-                background-color="white"
-                class="input rounded-lg mx-auto"
-                label="Email"
-                v-model="loginEmail"
-                filled
-                clearable
-              ></v-text-field>
-              <div class="null_remind mx-auto">此欄位不可為空</div>
-              <v-text-field
-                background-color="white"
-                class="input rounded-lg mx-auto"
-                label="密碼"
-                v-model="loginPassword"
-                filled
-                clearable
-              ></v-text-field>
-              <div class="null_remind mx-auto">此欄位不可為空</div>
+              <div class="input_container">
+                <v-text-field
+                  background-color="white"
+                  class="input rounded-lg mx-auto"
+                  label="Email"
+                  v-model="loginEmail"
+                  filled
+                  clearable
+                ></v-text-field>
+                <div class="null_remind mx-auto">此欄位不可為空</div>
+              </div>
+              <div class="input_container">
+                <v-text-field
+                  background-color="white"
+                  class="input rounded-lg mx-auto"
+                  label="密碼"
+                  v-model="loginPassword"
+                  filled
+                  clearable
+                  placeholder="不可小於6碼"
+                ></v-text-field>
+                <div class="null_remind mx-auto">此欄位不可為空</div>
+              </div>
             </div>
           </div>
-          <div v-if="register" class="container">
-            <div class="mb-4 text-h5 title text-center">註冊帳號</div>
-            <v-text-field
-              background-color="white"
-              class="input rounded-lg mx-auto"
-              label="Email"
-              v-model="registerEmail"
-              filled
-              clearable
-            ></v-text-field>
-            <v-text-field
-              background-color="white"
-              class="input rounded-lg mx-auto"
-              label="密碼"
-              v-model="registerPassword"
-              filled
-              clearable
-            ></v-text-field>
-            <v-text-field
-              background-color="white"
-              class="input rounded-lg mx-auto"
-              label="您的暱稱"
-              v-model="nickName"
-              filled
-              clearable
-            ></v-text-field>
-            <v-text-field
-              background-color="white"
-              class="input rounded-lg mx-auto"
-              label="再次輸入密碼"
-              v-model="againPassword"
-              filled
-              clearable
-            ></v-text-field>
+          <div v-if="register" class="container d-flex align-center">
+            <div class="form_container mx-auto">
+              <div class="mb-4 text-h5 title text-center">註冊帳號</div>
+              <div class="input_container">
+                <v-text-field
+                  background-color="white"
+                  class="input rounded-lg mx-auto"
+                  label="Email"
+                  v-model="registerEmail"
+                  filled
+                  clearable
+                ></v-text-field>
+                <div class="null_remind mx-auto">此欄位不可為空</div>
+              </div>
+              <div class="input_container">
+                <v-text-field
+                  background-color="white"
+                  class="input rounded-lg mx-auto"
+                  label="您的暱稱"
+                  v-model="nickName"
+                  filled
+                  clearable
+                ></v-text-field>
+                <div class="null_remind mx-auto">此欄位不可為空</div>
+              </div>
+              <div class="input_container">
+                <v-text-field
+                  background-color="white"
+                  class="input rounded-lg mx-auto"
+                  label="密碼"
+                  v-model="registerPassword"
+                  filled
+                  clearable
+                  placeholder="不可小於6碼"
+                ></v-text-field>
+                <div class="null_remind mx-auto">此欄位不可為空</div>
+              </div>
+              <div class="input_container">
+                <v-text-field
+                  background-color="white"
+                  class="input rounded-lg mx-auto"
+                  label="再次輸入密碼"
+                  v-model="againPassword"
+                  filled
+                  clearable
+                  placeholder="不可小於6碼"
+                ></v-text-field>
+                <div class="null_remind mx-auto">此欄位不可為空</div>
+              </div>
+            </div>
           </div>
           <div class="d-flex justify-center">
             <span class="btn" @click="loginFn" :class="login ? 'choice' : ''"
@@ -146,6 +167,8 @@ export default {
       this.loginEmail = "";
       this.loginPassword = "";
     },
+    loginSend() {},
+    registerSend() {},
   },
   mounted() {
     this.loginFn();
@@ -154,6 +177,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .v-input__slot:before {
+  border: none !important;
+}
+
+::v-deep .v-label--active {
+  transform: translateY(-15px) scale(0.75);
+}
+
 #app {
   min-height: 100%;
   .form_container {
@@ -174,23 +205,27 @@ export default {
     }
   }
   .container {
-    height: 400px;
+    height: 430px;
     width: 400px;
     font-family: "NotoSansTC" !important;
     .input {
       width: 300px !important;
     }
-    .login_container {
+    .form_container {
       width: 350px;
-      .title {
-        font-family: "NotoSansTC" !important;
-      }
     }
-    .null_remind {
-      color: #d87355;
-      width: 300px;
+    .title {
+      font-family: "NotoSansTC" !important;
+    }
+    .input_container {
       position: relative;
-      top: -25px;
+      .null_remind {
+        color: #d87355;
+        width: 300px;
+        position: absolute;
+        top: 57px;
+        left: 25px;
+      }
     }
   }
 }
