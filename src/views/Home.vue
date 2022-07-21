@@ -35,8 +35,66 @@
             flex-wrap
           "
         >
-          <Login v-if="login" />
-          <Register v-if="register" />
+          <div class="container d-flex align-center" v-if="login">
+            <div class="login_container mx-auto">
+              <div class="mb-4 text-h5 title text-center col-12">
+                線上代辦事項紀錄
+              </div>
+              <v-text-field
+                background-color="white"
+                class="input rounded-lg mx-auto"
+                label="Email"
+                v-model="loginEmail"
+                filled
+                clearable
+              ></v-text-field>
+              <div class="null_remind mx-auto">此欄位不可為空</div>
+              <v-text-field
+                background-color="white"
+                class="input rounded-lg mx-auto"
+                label="密碼"
+                v-model="loginPassword"
+                filled
+                clearable
+              ></v-text-field>
+              <div class="null_remind mx-auto">此欄位不可為空</div>
+            </div>
+          </div>
+          <div v-if="register" class="container">
+            <div class="mb-4 text-h5 title text-center">註冊帳號</div>
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="Email"
+              v-model="registerEmail"
+              filled
+              clearable
+            ></v-text-field>
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="密碼"
+              v-model="registerPassword"
+              filled
+              clearable
+            ></v-text-field>
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="您的暱稱"
+              v-model="nickName"
+              filled
+              clearable
+            ></v-text-field>
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="再次輸入密碼"
+              v-model="againPassword"
+              filled
+              clearable
+            ></v-text-field>
+          </div>
           <div class="d-flex justify-center">
             <span class="btn" @click="loginFn" :class="login ? 'choice' : ''"
               >登入</span
@@ -57,26 +115,36 @@
 </template>
 
 <script>
-import Login from "@/components/Login";
-import Register from "@/components/Register";
-
 export default {
   name: "Home",
-  components: { Login, Register },
+  components: {},
   data() {
     return {
       login: false,
       register: false,
+      loginEmail: "",
+      loginPassword: "",
+      registerEmail: "",
+      registerPassword: "",
+      againPassword: "",
+      nickName: "",
     };
   },
+  computed: {},
   methods: {
     loginFn() {
       this.register = false;
       this.login = true;
+      this.registerEmail = "";
+      this.registerPassword = "";
+      this.againPassword = "";
+      this.nickName = "";
     },
     registerFn() {
       this.login = false;
       this.register = true;
+      this.loginEmail = "";
+      this.loginPassword = "";
     },
   },
   mounted() {
@@ -103,6 +171,26 @@ export default {
       font-family: "NotoSansTC";
       cursor: pointer;
       margin: 5px;
+    }
+  }
+  .container {
+    height: 400px;
+    width: 400px;
+    font-family: "NotoSansTC" !important;
+    .input {
+      width: 300px !important;
+    }
+    .login_container {
+      width: 350px;
+      .title {
+        font-family: "NotoSansTC" !important;
+      }
+    }
+    .null_remind {
+      color: #d87355;
+      width: 300px;
+      position: relative;
+      top: -25px;
     }
   }
 }
