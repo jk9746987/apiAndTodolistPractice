@@ -60,7 +60,7 @@
                   filled
                   clearable
                 ></v-text-field>
-                <div class="null_remind mx-auto">此欄位不可為空</div>
+                <div class="null_remind mx-auto">{{ email_error }}</div>
               </div>
               <div class="input_container">
                 <v-text-field
@@ -126,12 +126,13 @@
               </div>
             </div>
           </div>
-          <div class="send_container col-12 d-flex justify-center">
+          <div class="col-12 d-flex justify-center">
             <v-btn
-              class="send white--text rounded-lg"
+              class="white--text rounded-lg"
               width="300"
               height="50"
               color="#333333"
+              @click="sendFn"
               >{{ send }}</v-btn
             >
           </div>
@@ -142,6 +143,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { POST_SIGN_IN } from "@/store/action_type";
 export default {
   name: "Home",
   components: {},
@@ -155,6 +158,7 @@ export default {
       registerPassword: "",
       againPassword: "",
       nickName: "",
+      email_error: null,
     };
   },
   computed: {
@@ -163,6 +167,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions("Home", {
+      postSignIn: POST_SIGN_IN,
+    }),
     loginFn() {
       this.register = false;
       this.login = true;
@@ -177,8 +184,20 @@ export default {
       this.loginEmail = "";
       this.loginPassword = "";
     },
-    loginSend() {},
-    registerSend() {},
+    sendFn() {
+      if (this.login) {
+        console.log("haha");
+      } else if (this.register) {
+        // if (this.registerPassword === this.againPassword) {
+        //   this.postSignIn({
+        //     email: this.registerEmail,
+        //     nickname: this.nickName,
+        //     password: this.registerPassword,
+        //   });
+        // }
+        console.log("register");
+      }
+    },
   },
   mounted() {
     this.loginFn();
@@ -232,6 +251,7 @@ export default {
     }
     .container {
       width: 400px;
+      padding-bottom: 0;
       .input {
         width: 300px !important;
       }
@@ -240,17 +260,14 @@ export default {
       }
       .input_container {
         position: relative;
+        margin-bottom: 10px;
         .null_remind {
           color: #d87355;
           width: 300px;
           position: absolute;
-          top: 57px;
+          top: 60px;
           left: 25px;
         }
-      }
-    }
-    .send_container {
-      .send {
       }
     }
   }
