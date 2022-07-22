@@ -26,20 +26,31 @@
           color="transparent"
           elevation="0"
           max-width="400"
-          class="
-            mx-auto
-            form_container
-            d-flex
-            justify-center
-            align-center
-            flex-wrap
-          "
+          class="mx-auto left_container"
         >
-          <div class="container d-flex align-center" v-if="login">
+          <div class="mb-4 text-h5 title text-center col-12">
+            線上代辦事項紀錄
+          </div>
+          <div class="btn_container col-12 d-flex justify-center">
+            <div class="d-flex justify-center pr-3">
+              <span
+                class="btn btn_login"
+                @click="loginFn"
+                :class="login ? 'choice' : ''"
+                >登入</span
+              >
+            </div>
+            <div class="d-flex justify-center pl-3">
+              <span
+                class="btn"
+                @click="registerFn"
+                :class="register ? 'choice' : ''"
+                >註冊帳號</span
+              >
+            </div>
+          </div>
+          <div class="container" v-if="login">
             <div class="form_container mx-auto">
-              <div class="mb-4 text-h5 title text-center col-12">
-                線上代辦事項紀錄
-              </div>
               <div class="input_container">
                 <v-text-field
                   background-color="white"
@@ -65,9 +76,8 @@
               </div>
             </div>
           </div>
-          <div v-if="register" class="container d-flex align-center">
+          <div v-if="register" class="container">
             <div class="form_container mx-auto">
-              <div class="mb-4 text-h5 title text-center">註冊帳號</div>
               <div class="input_container">
                 <v-text-field
                   background-color="white"
@@ -116,17 +126,13 @@
               </div>
             </div>
           </div>
-          <div class="d-flex justify-center">
-            <span class="btn" @click="loginFn" :class="login ? 'choice' : ''"
-              >登入</span
-            >
-          </div>
-          <div class="d-flex justify-center">
-            <span
-              class="btn"
-              @click="registerFn"
-              :class="register ? 'choice' : ''"
-              >註冊帳號</span
+          <div class="send_container col-12 d-flex justify-center">
+            <v-btn
+              class="send white--text rounded-lg"
+              width="300"
+              height="50"
+              color="#333333"
+              >{{ send }}</v-btn
             >
           </div>
         </v-card>
@@ -151,7 +157,11 @@ export default {
       nickName: "",
     };
   },
-  computed: {},
+  computed: {
+    send() {
+      return this.login ? "登入" : "註冊";
+    },
+  },
   methods: {
     loginFn() {
       this.register = false;
@@ -187,44 +197,60 @@ export default {
 
 #app {
   min-height: 100%;
-  .form_container {
-    div .choice {
-      background-color: #333333;
-      border-radius: 10px;
-      color: white;
+  font-family: "NotoSansTC" !important;
+  .left_container {
+    height: 600px;
+    .btn_container {
+      div .choice {
+        background-color: #333333;
+        border-radius: 10px;
+        color: white;
+      }
+      div .btn {
+        width: 120px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "NotoSansTC";
+        cursor: pointer;
+        margin: 5px;
+      }
+      div .btn_login::after {
+        content: "";
+        width: 2px;
+        height: 55px;
+        background-color: #333333;
+        position: relative;
+        right: -61px;
+        top: 0;
+      }
     }
-    div .btn {
-      width: 130px;
-      height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "NotoSansTC";
-      cursor: pointer;
-      margin: 5px;
-    }
-  }
-  .container {
-    height: 430px;
-    width: 400px;
-    font-family: "NotoSansTC" !important;
-    .input {
-      width: 300px !important;
-    }
-    .form_container {
-      width: 350px;
-    }
+
     .title {
       font-family: "NotoSansTC" !important;
     }
-    .input_container {
-      position: relative;
-      .null_remind {
-        color: #d87355;
-        width: 300px;
-        position: absolute;
-        top: 57px;
-        left: 25px;
+    .container {
+      width: 400px;
+      .input {
+        width: 300px !important;
+      }
+      .form_container {
+        width: 350px;
+      }
+      .input_container {
+        position: relative;
+        .null_remind {
+          color: #d87355;
+          width: 300px;
+          position: absolute;
+          top: 57px;
+          left: 25px;
+        }
+      }
+    }
+    .send_container {
+      .send {
       }
     }
   }
