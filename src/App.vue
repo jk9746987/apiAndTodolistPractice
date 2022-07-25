@@ -16,8 +16,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #app {
   background-color: #ffd370;
+  font-family: "NotoSansTC" !important;
 }
 </style>

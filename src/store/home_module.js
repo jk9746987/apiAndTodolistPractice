@@ -1,23 +1,37 @@
 import Api from '@/common/api'
-import { POST_SIGN_IN } from './action_type'
+import { POST_REGISTER, POST_SIGN_IN } from './action_type'
 
 const state = {}
 
 const mutations = {}
 
 const actions = {
-    [POST_SIGN_IN](context, { email, nickname, password }) {
+    [POST_REGISTER](context, { email, nickname, password }) {
         return new Promise((resolve, reject) => {
             Api.post('users', {
-                email: email,
-                nickname: nickname,
-                password: password,
+                user: {
+                    email: email,
+                    nickname: nickname,
+                    password: password,
+                }
             }).then(res => {
-                console.log(res)
-                resolve()
+                resolve(res)
             }).catch(err => {
-                console.log(err)
-                reject()
+                reject(err)
+            })
+        })
+    },
+    [POST_SIGN_IN](context, { email, password }) {
+        return new Promise((resolve, reject) => {
+            Api.post('users/sign_in', {
+                user: {
+                    email: email,
+                    password: password
+                }
+            }).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
             })
         })
     }

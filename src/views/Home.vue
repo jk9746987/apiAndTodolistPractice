@@ -35,7 +35,7 @@
             <div class="d-flex justify-center pr-3">
               <span
                 class="btn btn_login"
-                @click="loginFn"
+                @click="loginClear"
                 :class="login ? 'choice' : ''"
                 >登入</span
               >
@@ -43,7 +43,7 @@
             <div class="d-flex justify-center pl-3">
               <span
                 class="btn"
-                @click="registerFn"
+                @click="registerClear"
                 :class="register ? 'choice' : ''"
                 >註冊帳號</span
               >
@@ -60,7 +60,7 @@
                   filled
                   clearable
                 ></v-text-field>
-                <div class="null_remind mx-auto">{{ email_error }}</div>
+                <div class="null_remind mx-auto">{{ loginEmailError }}</div>
               </div>
               <div class="input_container">
                 <v-text-field
@@ -72,7 +72,7 @@
                   clearable
                   placeholder="不可小於6碼"
                 ></v-text-field>
-                <div class="null_remind mx-auto">此欄位不可為空</div>
+                <div class="null_remind mx-auto">{{ loginPasswordError }}</div>
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@
                   filled
                   clearable
                 ></v-text-field>
-                <div class="null_remind mx-auto">此欄位不可為空</div>
+                <div class="null_remind mx-auto">{{ registerEmailError }}</div>
               </div>
               <div class="input_container">
                 <v-text-field
@@ -98,7 +98,7 @@
                   filled
                   clearable
                 ></v-text-field>
-                <div class="null_remind mx-auto">此欄位不可為空</div>
+                <div class="null_remind mx-auto">{{ nickNameError }}</div>
               </div>
               <div class="input_container">
                 <v-text-field
@@ -110,7 +110,9 @@
                   clearable
                   placeholder="不可小於6碼"
                 ></v-text-field>
-                <div class="null_remind mx-auto">此欄位不可為空</div>
+                <div class="null_remind mx-auto">
+                  {{ registerPasswordError }}
+                </div>
               </div>
               <div class="input_container">
                 <v-text-field
@@ -122,7 +124,7 @@
                   clearable
                   placeholder="不可小於6碼"
                 ></v-text-field>
-                <div class="null_remind mx-auto">此欄位不可為空</div>
+                <div class="null_remind mx-auto">{{ againPasswordError }}</div>
               </div>
             </div>
           </div>
@@ -139,26 +141,34 @@
         </v-card>
       </v-col>
     </v-row>
+    <Message :message="message" ref="message" />
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
-import { POST_SIGN_IN } from "@/store/action_type";
+import { POST_REGISTER, POST_SIGN_IN } from "@/store/action_type";
+import Message from "@/components/Message";
 export default {
   name: "Home",
-  components: {},
+  components: { Message },
   data() {
     return {
       login: false,
       register: false,
-      loginEmail: "",
-      loginPassword: "",
-      registerEmail: "",
-      registerPassword: "",
-      againPassword: "",
-      nickName: "",
-      email_error: null,
+      loginEmail: null,
+      loginPassword: null,
+      registerEmail: null,
+      registerPassword: null,
+      againPassword: null,
+      nickName: null,
+      loginEmailError: null,
+      loginPasswordError: null,
+      registerEmailError: null,
+      registerPasswordError: null,
+      nickNameError: null,
+      againPasswordError: null,
+      message: null,
     };
   },
   computed: {
@@ -168,39 +178,120 @@ export default {
   },
   methods: {
     ...mapActions("Home", {
+      postRegister: POST_REGISTER,
       postSignIn: POST_SIGN_IN,
     }),
-    loginFn() {
+    loginClear() {
       this.register = false;
       this.login = true;
-      this.registerEmail = "";
-      this.registerPassword = "";
-      this.againPassword = "";
-      this.nickName = "";
+      this.registerEmail = null;
+      this.registerPassword = null;
+      this.againPassword = null;
+      this.nickName = null;
+      this.registerEmailError = null;
+      this.registerPasswordError = null;
+      this.againPasswordError = null;
+      this.nickNameError = null;
     },
-    registerFn() {
+    registerClear() {
       this.login = false;
       this.register = true;
-      this.loginEmail = "";
-      this.loginPassword = "";
+      this.loginEmail = null;
+      this.loginPassword = null;
+      this.loginEmailError = null;
+      this.loginPasswordError = null;
     },
     sendFn() {
       if (this.login) {
-        console.log("haha");
+        this.sendError();
+        if (this.loginEmail && this.loginPassword) {
+          this.postSignIn({
+            email: this.loginEmail,
+            password: this.loginPassword,
+          })
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+              this.message = {
+                title: err.response.data.message,
+                description: `電子信箱或密碼輸入錯誤`,
+              };
+              this.$nextTick(() => {
+                this.$refs.message.message_dialog = true;
+              });
+            });
+        }
       } else if (this.register) {
-        // if (this.registerPassword === this.againPassword) {
-        //   this.postSignIn({
-        //     email: this.registerEmail,
-        //     nickname: this.nickName,
-        //     password: this.registerPassword,
-        //   });
-        // }
-        console.log("register");
+        this.sendError();
+        if (
+          this.registerEmail &&
+          this.nickName &&
+          this.registerPassword &&
+          this.registerPassword === this.againPassword
+        ) {
+          this.postRegister({
+            email: this.registerEmail,
+            nickname: this.nickName,
+            password: this.registerPassword,
+          })
+            .then((res) => {
+              console.log(res);
+              this.loginClear();
+              this.message = {
+                title: res.data.message,
+                description: `${res.data.nickname}歡迎使用本服務！`,
+              };
+              this.$nextTick(() => {
+                this.$refs.message.message_dialog = true;
+              });
+            })
+            .catch((err) => {
+              this.message = {
+                title: err.response.data.message,
+                description: err.response.data.error[0],
+              };
+              this.$nextTick(() => {
+                this.$refs.message.message_dialog = true;
+              });
+            });
+        }
+      }
+    },
+    sendError() {
+      if (this.login) {
+        !this.loginEmail
+          ? (this.loginEmailError = "此欄位不可為空")
+          : (this.loginEmailError = null);
+        !this.loginPassword
+          ? (this.loginPasswordError = "此欄位不可為空")
+          : this.loginPassword.length < 6
+          ? (this.loginPasswordError = "不可小於6碼")
+          : (this.loginPasswordError = null);
+      } else if (this.register) {
+        !this.registerEmail
+          ? (this.registerEmailError = "此欄位不可為空")
+          : (this.registerEmailError = null);
+        !this.nickName
+          ? (this.nickNameError = "此欄位不可為空")
+          : (this.nickNameError = null);
+        !this.registerPassword
+          ? (this.registerPasswordError = "此欄位不可為空")
+          : this.registerPassword.length < 6
+          ? (this.registerPasswordError = "不可小於6碼")
+          : (this.registerPasswordError = null);
+        !this.againPassword
+          ? (this.againPasswordError = "此欄位不可為空")
+          : this.againPassword.length > 0 &&
+            this.againPassword !== this.registerPassword
+          ? (this.againPasswordError = "再次輸入密碼錯誤")
+          : (this.againPasswordError = null);
       }
     },
   },
   mounted() {
-    this.loginFn();
+    this.loginClear();
   },
 };
 </script>
@@ -216,7 +307,6 @@ export default {
 
 #app {
   min-height: 100%;
-  font-family: "NotoSansTC" !important;
   .left_container {
     height: 600px;
     .btn_container {
@@ -231,7 +321,6 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        font-family: "NotoSansTC";
         cursor: pointer;
         margin: 5px;
       }
