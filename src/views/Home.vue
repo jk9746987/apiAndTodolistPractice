@@ -204,16 +204,20 @@ export default {
     sendFn() {
       if (this.login) {
         this.sendError();
-        if (this.loginEmail && this.loginPassword) {
+        if (
+          this.loginEmail &&
+          this.loginPassword &&
+          this.loginPassword.length >= 6
+        ) {
           this.postSignIn({
             email: this.loginEmail,
             password: this.loginPassword,
           })
             .then((res) => {
               console.log(res);
+              this.$router.push({ name: "Todo" });
             })
             .catch((err) => {
-              console.log(err);
               this.message = {
                 title: err.response.data.message,
                 description: `電子信箱或密碼輸入錯誤`,
