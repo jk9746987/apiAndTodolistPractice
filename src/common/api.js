@@ -8,7 +8,7 @@ const _axios = axios.create(config)
 
 const Api = {
     get(resource, params) {
-        return _axios.get(resource, { params: params })
+        return _axios.get(resource, params)
     },
 
     post(resource, params) {
@@ -24,5 +24,31 @@ const Api = {
     }
 
 }
+
+_axios.interceptors.request.use(
+    function (config) {
+        if (localStorage.getItem('set_token')) {
+            _axios.defaults.headers.common['Authorization'] = localStorage.getItem('set_token')
+        }
+        console.log(config)
+        return config
+    },
+    function (error) {
+        console.log(error)
+        return Promise.reject(error)
+    }
+)
+
+_axios.interceptors.response.use(
+    function (config) {
+        console.log(config)
+        return config
+    },
+    function (error) {
+        console.log(error)
+        return Promise.reject(error)
+    }
+)
+
 
 export default Api
