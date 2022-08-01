@@ -1,5 +1,5 @@
 import Api from '@/common/api'
-import { GET_TODOS, POST_TODOS, PUT_TODOS } from './action_type'
+import { GET_TODOS, POST_TODOS, PUT_TODOS, DELETE_TODOS } from './action_type'
 
 const state = {
 }
@@ -40,6 +40,15 @@ const actions = {
                     content: editTodo
                 }
             }).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
+    [DELETE_TODOS](context, { id }) {
+        return new Promise((resolve, reject) => {
+            Api.delete(`todos/${id}`).then(res => {
                 resolve(res)
             }).catch(err => {
                 reject(err)

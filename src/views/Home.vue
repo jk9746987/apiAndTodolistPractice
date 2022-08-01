@@ -123,7 +123,7 @@
         </div>
       </div>
     </div>
-    <Confirm ref="confirm" />
+    <Confirm ref="confirm" @reloadTodo="getTodo" />
   </div>
 </template>
 
@@ -195,6 +195,7 @@ export default {
         });
       }
       this.newTodo = null;
+      this.getTodo();
     },
     choice_status(item, index) {
       this.choiceStatus = item;
@@ -235,16 +236,19 @@ export default {
       });
       this.todoList = uncompleteList;
     },
+    getTodo() {
+      this.getTodos()
+        .then((res) => {
+          this.todoList = res.data.todos;
+          console.log(this.todoList);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   created() {
-    this.getTodos()
-      .then((res) => {
-        this.todoList = res.data.todos;
-        console.log(this.todoList);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.getTodo();
   },
 };
 </script>

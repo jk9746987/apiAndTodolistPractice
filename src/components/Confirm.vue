@@ -6,9 +6,7 @@
           確定要刪除此待辦事項嗎？
         </v-card-title>
         <v-card-actions class="justify-space-around pb-4 col-8 mx-auto">
-          <v-btn color="black" outlined @click="confirm_dialog = false">
-            刪除
-          </v-btn>
+          <v-btn color="black" outlined @click="deleteTodo"> 刪除 </v-btn>
           <v-btn color="black" outlined @click="confirm_dialog = false">
             取消
           </v-btn>
@@ -19,6 +17,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { DELETE_TODOS } from "@/store/action_type";
 export default {
   name: "confirm",
   data() {
@@ -26,6 +26,20 @@ export default {
       confirm_dialog: false,
       detail: null,
     };
+  },
+  methods: {
+    ...mapActions("Home", { deleteTodos: DELETE_TODOS }),
+    deleteTodo() {
+      this.deleteTodos({ id: this.detail.id })
+        .then(() => {
+          this.$emit("reloadTodo");
+          this.confirm_dialog = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      this.$parent.getTodo();
+    },
   },
 };
 </script>
