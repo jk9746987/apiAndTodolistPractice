@@ -59,22 +59,22 @@
             <div class="txt_container d-flex">
               <v-icon
                 class="mr-3"
-                v-if="item.done === false"
-                @click="item.done = !item.done"
+                v-if="item.completed_at === null || item.completed_at === false"
+                @click="item.completed_at = !item.completed_at"
                 >mdi-square-outline</v-icon
               >
               <v-icon
                 class="mr-3"
-                v-if="item.done === true"
-                @click="item.done = !item.done"
+                v-if="item.completed_at"
+                @click="item.completed_at = !item.completed_at"
                 >mdi-square</v-icon
               >
               <div
                 class="txt"
-                @click="item.done = !item.done"
-                :class="item.done === true ? 'complete_todo' : ''"
+                @click="item.completed_at = !item.completed_at"
+                :class="item.completed_at ? 'complete_todo' : ''"
               >
-                {{ item.txt }}
+                {{ item.content }}
               </div>
             </div>
             <div class="button_container">
@@ -123,6 +123,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { GET_TODOS, POST_TODOS } from "@/store/action_type";
 export default {
   name: "todo",
   data() {
@@ -133,23 +134,7 @@ export default {
       status: ["全部", "待完成", "已完成"],
       choiceStatus: "全部",
       count: 0,
-      todoList: [
-        {
-          id: 1,
-          txt: "haha1",
-          done: false,
-        },
-        {
-          id: 2,
-          txt: "haha2",
-          done: false,
-        },
-        {
-          id: 3,
-          txt: "haha3",
-          done: false,
-        },
-      ],
+      todoList: [],
     };
   },
   computed: {
@@ -157,7 +142,7 @@ export default {
     todoStatus() {
       let number = 0;
       this.filterTodoList.forEach((item) => {
-        if (!item.done) {
+        if (!item.completed_at) {
           number++;
         }
       });
@@ -170,14 +155,14 @@ export default {
           return this.todoList;
         case "待完成":
           this.todoList.forEach((item) => {
-            if (!item.done) {
+            if (!item.completed_at) {
               choiceStatusList.push(item);
             }
           });
           return choiceStatusList;
         case "已完成":
           this.todoList.forEach((item) => {
-            if (item.done) {
+            if (item.completed_at) {
               choiceStatusList.push(item);
             }
           });
@@ -188,7 +173,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions({ userCheck: USER_CHECK }),
+    ...mapActions("Home", {
+      getTodos: GET_TODOS,
+      postTodos: POST_TODOS,
+    }),
     addTodo() {
       if (this.newTodo) {
         this.todoList.push({
@@ -197,6 +185,9 @@ export default {
           done: false,
         });
       }
+      this.postTodos({
+        todo: this.newTodo,
+      });
       this.newTodo = null;
     },
     choice_status(item, index) {
@@ -233,6 +224,16 @@ export default {
       });
       this.todoList = uncompleteList;
     },
+  },
+  created() {
+    this.getTodos()
+      .then((res) => {
+        this.todoList = res.data.todos;
+        console.log(this.todoList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>

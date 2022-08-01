@@ -179,10 +179,10 @@ export default {
     },
   },
   methods: {
-    ...mapMutations("Home", {
+    ...mapMutations("Login", {
       setNickname: SET_NICKNAME,
     }),
-    ...mapActions("Home", {
+    ...mapActions("Login", {
       postRegister: POST_REGISTER,
       postSignIn: POST_SIGN_IN,
     }),
@@ -220,6 +220,7 @@ export default {
           })
             .then((res) => {
               let token = res.headers.authorization;
+              console.log(token);
               localStorage.setItem("set_token", token);
               this.$router.push({ name: "Home" });
               this.setNickname(res.data.nickname);
