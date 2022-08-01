@@ -78,7 +78,7 @@
               </div>
             </div>
             <div class="button_container">
-              <v-icon @click="editTodo(item)" :disabled="item.done"
+              <v-icon @click="editTodo(item)" :disabled="item.completed_at"
                 >mdi-pencil</v-icon
               >
               <v-icon @click="deleteTodo(item)">mdi-close</v-icon>
@@ -179,15 +179,10 @@ export default {
     }),
     addTodo() {
       if (this.newTodo) {
-        this.todoList.push({
-          id: Date.now(),
-          txt: this.newTodo,
-          done: false,
+        this.postTodos({
+          todo: this.newTodo,
         });
       }
-      this.postTodos({
-        todo: this.newTodo,
-      });
       this.newTodo = null;
     },
     choice_status(item, index) {
@@ -239,7 +234,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .v-text-field__details {
+:deep(.v-text-field__details) {
   display: none;
 }
 #app {
@@ -301,7 +296,7 @@ export default {
   }
 }
 
-.input_container ::v-deep .v-icon {
+.input_container :deep(.v-icon) {
   font-size: 45px;
 }
 </style>

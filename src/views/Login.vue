@@ -309,11 +309,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .v-input__slot:before {
+:deep(.v-input__slot:before) {
   border: none !important;
 }
 
-::v-deep .v-label--active {
+:deep(.v-label--active) {
   transform: translateY(-15px) scale(0.75);
 }
 
