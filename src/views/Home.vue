@@ -114,6 +114,7 @@
               <v-icon @click="deleteTodo(item)">mdi-close</v-icon>
             </div>
           </div>
+
           <v-divider inset class="mx-auto"></v-divider>
         </div>
         <div class="total_todo px-7 mx-2 mt-4 d-flex justify-space-between">
@@ -122,14 +123,19 @@
         </div>
       </div>
     </div>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
 import { GET_TODOS, POST_TODOS, PUT_TODOS } from "@/store/action_type";
+import Confirm from "@/components/Confirm";
 export default {
   name: "todo",
+  components: {
+    Confirm,
+  },
   data() {
     return {
       newTodo: null,
@@ -210,10 +216,14 @@ export default {
       this.todoField = null;
     },
     deleteTodo(data) {
-      this.todoList.forEach((item, index) => {
-        if (item.id === data.id) {
-          this.todoList.splice(index, 1);
-        }
+      // this.todoList.forEach((item, index) => {
+      //   if (item.id === data.id) {
+      //     this.todoList.splice(index, 1);
+      //   }
+      // });
+      this.$nextTick(() => {
+        this.$refs.confirm.confirm_dialog = true;
+        this.$refs.confirm.detail = data;
       });
     },
     clearComplete() {
