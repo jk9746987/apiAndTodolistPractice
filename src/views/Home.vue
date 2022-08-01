@@ -78,7 +78,11 @@
               </div>
             </div>
             <div class="button_container">
-              <v-icon @click="editTodo(item)" :disabled="item.completed_at"
+              <v-icon
+                @click="editTodo(item)"
+                :disabled="
+                  item.completed_at !== null || item.completed_at === false
+                "
                 >mdi-pencil</v-icon
               >
               <v-icon @click="deleteTodo(item)">mdi-close</v-icon>
@@ -123,7 +127,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { GET_TODOS, POST_TODOS } from "@/store/action_type";
+import { GET_TODOS, POST_TODOS, PUT_TODOS } from "@/store/action_type";
 export default {
   name: "todo",
   data() {
@@ -176,6 +180,7 @@ export default {
     ...mapActions("Home", {
       getTodos: GET_TODOS,
       postTodos: POST_TODOS,
+      putTodos: PUT_TODOS,
     }),
     addTodo() {
       if (this.newTodo) {
@@ -192,15 +197,16 @@ export default {
     },
     editTodo(data) {
       this.todoField = data;
-      this.editInput = data.txt;
+      this.editInput = data.content;
       this.$nextTick(() => {
-        console.log(this.$refs);
         // 由於ref是可變的加上回傳的是一個陣列，故後面需補上[0]
         this.$refs[`focusInput${data.id}`][0].focus();
       });
     },
     confirmEdit(data) {
-      data.txt = this.editInput;
+      data.content = this.editInput;
+      this.putTodos({ id: data.id, editTodo: data.content });
+      this.editInput = null;
       this.todoField = null;
     },
     deleteTodo(data) {

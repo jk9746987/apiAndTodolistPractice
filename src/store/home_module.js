@@ -1,5 +1,5 @@
 import Api from '@/common/api'
-import { GET_TODOS, POST_TODOS } from './action_type'
+import { GET_TODOS, POST_TODOS, PUT_TODOS } from './action_type'
 
 const state = {
 }
@@ -31,6 +31,19 @@ const actions = {
             }).then(res => {
                 resolve(res)
             }).catch(err => { reject(err) })
+        })
+    },
+    [PUT_TODOS](context, { id, editTodo }) {
+        return new Promise((resolve, reject) => {
+            Api.put(`todos/${id}`, {
+                todo: {
+                    content: editTodo
+                }
+            }).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
         })
     }
 }
