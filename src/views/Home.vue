@@ -60,18 +60,18 @@
               <v-icon
                 class="mr-3"
                 v-if="item.completed_at === null || item.completed_at === false"
-                @click="item.completed_at = !item.completed_at"
+                @click="toggleTodoStatus(item)"
                 >mdi-square-outline</v-icon
               >
               <v-icon
                 class="mr-3"
                 v-if="item.completed_at"
-                @click="item.completed_at = !item.completed_at"
+                @click="toggleTodoStatus(item)"
                 >mdi-square</v-icon
               >
               <div
                 class="txt"
-                @click="item.completed_at = !item.completed_at"
+                @click="toggleTodoStatus(item)"
                 :class="item.completed_at ? 'complete_todo' : ''"
               >
                 {{ item.content }}
@@ -80,9 +80,7 @@
             <div class="button_container">
               <v-icon
                 @click="editTodo(item)"
-                :disabled="
-                  item.completed_at !== null || item.completed_at === false
-                "
+                :disabled="item.completed_at !== null"
                 >mdi-pencil</v-icon
               >
               <v-icon @click="deleteTodo(item)">mdi-close</v-icon>
@@ -129,7 +127,12 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { GET_TODOS, POST_TODOS, PUT_TODOS } from "@/store/action_type";
+import {
+  GET_TODOS,
+  POST_TODOS,
+  PUT_TODOS,
+  PATCH_TODOS,
+} from "@/store/action_type";
 import Confirm from "@/components/Confirm";
 export default {
   name: "todo",
@@ -187,6 +190,7 @@ export default {
       getTodos: GET_TODOS,
       postTodos: POST_TODOS,
       putTodos: PUT_TODOS,
+      patchTodos: PATCH_TODOS,
     }),
     addTodo() {
       if (this.newTodo) {
@@ -241,6 +245,16 @@ export default {
         .then((res) => {
           this.todoList = res.data.todos;
           console.log(this.todoList);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    toggleTodoStatus(data) {
+      this.patchTodos({ id: data.id })
+        .then((res) => {
+          console.log(res);
+          this.getTodo();
         })
         .catch((err) => {
           console.log(err);

@@ -21,6 +21,10 @@ const Api = {
 
     delete(resource, params) {
         return _axios.delete(resource, { params: params })
+    },
+
+    patch(resource, params) {
+        return _axios.patch(resource, params)
     }
 
 }
