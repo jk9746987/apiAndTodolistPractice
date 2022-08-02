@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 
 const config = {
     baseURL: 'https://todoo.5xcamp.us/'
@@ -49,8 +50,14 @@ _axios.interceptors.response.use(
         return config
     },
     function (error) {
-        console.log(error)
-        return Promise.reject(error)
+        switch (error.response.status) {
+            case 401:
+                router.push({ name: 'Login' })
+                localStorage.clear()
+                break;
+            default:
+                return Promise.reject(error)
+        }
     }
 )
 
