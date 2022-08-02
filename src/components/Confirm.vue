@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       confirm_dialog: false,
-      detail: null,
+      detail: [],
     };
   },
   computed: {
