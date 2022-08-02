@@ -117,7 +117,13 @@
         </div>
         <div class="total_todo px-7 mx-2 mt-4 d-flex justify-space-between">
           <div>共 {{ todoStatus }} 個待完成項目</div>
-          <div class="complete" @click="clearComplete">清除已完成項目</div>
+          <button
+            class="complete"
+            @click="clearComplete"
+            :disabled="completeTodo === 0"
+          >
+            清除已完成項目
+          </button>
         </div>
       </div>
     </div>
@@ -131,6 +137,7 @@ import {
   GET_TODOS,
   POST_TODOS,
   PUT_TODOS,
+  DELETE_TODOS,
   PATCH_TODOS,
 } from "@/store/action_type";
 import Confirm from "@/components/Confirm";
@@ -148,6 +155,7 @@ export default {
       choiceStatus: "全部",
       count: 0,
       todoList: [],
+      completeList: [],
     };
   },
   computed: {
@@ -184,12 +192,18 @@ export default {
           return "";
       }
     },
+    completeTodo() {
+      return this.todoList.filter((item) => {
+        return item.completed_at !== null;
+      }).length;
+    },
   },
   methods: {
     ...mapActions("Home", {
       getTodos: GET_TODOS,
       postTodos: POST_TODOS,
       putTodos: PUT_TODOS,
+      deleteTodos: DELETE_TODOS,
       patchTodos: PATCH_TODOS,
     }),
     addTodo() {
@@ -221,24 +235,25 @@ export default {
       this.todoField = null;
     },
     deleteTodo(data) {
-      // this.todoList.forEach((item, index) => {
-      //   if (item.id === data.id) {
-      //     this.todoList.splice(index, 1);
-      //   }
-      // });
       this.$nextTick(() => {
+        let list = [];
+        list.push(data);
+        console.log(list);
         this.$refs.confirm.confirm_dialog = true;
-        this.$refs.confirm.detail = data;
+        this.$refs.confirm.detail = list;
       });
     },
     clearComplete() {
-      let uncompleteList = [];
+      this.completeList = [];
       this.todoList.forEach((item) => {
-        if (!item.done) {
-          uncompleteList.push(item);
+        if (item.completed_at !== null) {
+          this.completeList.push(item);
         }
       });
-      this.todoList = uncompleteList;
+      this.$nextTick(() => {
+        this.$refs.confirm.confirm_dialog = true;
+        this.$refs.confirm.detail = this.completeList;
+      });
     },
     getTodo() {
       this.getTodos()
@@ -324,7 +339,6 @@ export default {
     .total_todo {
       .complete {
         color: #9f9a91;
-        cursor: pointer;
       }
     }
   }
