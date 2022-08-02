@@ -11,7 +11,7 @@
         />
       </div>
       <div class="d-flex topAndright">
-        <div class="mr-4">Hi, {{ nickname }} 您好</div>
+        <div class="mr-4">Hi, {{ nickName }} 您好</div>
         <div>登出</div>
       </div>
     </div>
@@ -196,6 +196,9 @@ export default {
       return this.todoList.filter((item) => {
         return item.completed_at !== null;
       }).length;
+    },
+    nickName() {
+      return localStorage.getItem("nickName");
     },
   },
   methods: {

@@ -1,15 +1,10 @@
 import Api from '@/common/api'
-import { SET_NICKNAME } from './mutation_type'
 import { POST_REGISTER, POST_SIGN_IN } from './action_type'
 
 const state = {
-    nickname: null,
 }
 
 const mutations = {
-    [SET_NICKNAME](state, payload) {
-        state.nickname = payload
-    }
 }
 
 const actions = {

@@ -146,8 +146,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
-import { SET_NICKNAME } from "@/store/mutation_type";
+import { mapActions } from "vuex";
 import { POST_REGISTER, POST_SIGN_IN } from "@/store/action_type";
 import Message from "@/components/Message";
 export default {
@@ -179,9 +178,6 @@ export default {
     },
   },
   methods: {
-    ...mapMutations("Login", {
-      setNickname: SET_NICKNAME,
-    }),
     ...mapActions("Login", {
       postRegister: POST_REGISTER,
       postSignIn: POST_SIGN_IN,
@@ -222,8 +218,8 @@ export default {
               let token = res.headers.authorization;
               console.log(token);
               localStorage.setItem("set_token", token);
+              localStorage.setItem("nickName", res.data.nickname);
               this.$router.push({ name: "Home" });
-              this.setNickname(res.data.nickname);
             })
             .catch((err) => {
               this.message = {
