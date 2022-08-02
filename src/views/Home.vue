@@ -12,7 +12,7 @@
       </div>
       <div class="d-flex topAndright">
         <div class="mr-4">Hi, {{ nickName }} 您好</div>
-        <div>登出</div>
+        <button @click="signOut">登出</button>
       </div>
     </div>
     <div class="outside mx-auto pb-4">
@@ -282,6 +282,10 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    signOut() {
+      this.$router.push({ name: "Login" });
+      localStorage.clear();
     },
   },
   created() {

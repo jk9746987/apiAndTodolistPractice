@@ -1,5 +1,11 @@
 import Api from '@/common/api'
-import { GET_TODOS, POST_TODOS, PUT_TODOS, DELETE_TODOS, PATCH_TODOS } from './action_type'
+import {
+    GET_TODOS,
+    POST_TODOS,
+    PUT_TODOS,
+    DELETE_TODOS,
+    PATCH_TODOS,
+} from './action_type'
 
 const state = {
 }
@@ -63,7 +69,7 @@ const actions = {
                 reject(err)
             })
         })
-    }
+    },
 }
 
 export default {
