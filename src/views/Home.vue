@@ -210,10 +210,15 @@ export default {
       if (this.newTodo) {
         this.postTodos({
           todo: this.newTodo,
-        });
+        })
+          .then(() => {
+            this.newTodo = null;
+            this.getTodo();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
-      this.newTodo = null;
-      this.getTodo();
     },
     choice_status(item, index) {
       this.choiceStatus = item;
