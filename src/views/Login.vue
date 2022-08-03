@@ -134,8 +134,8 @@
               width="300"
               height="50"
               color="#333333"
-              @click="sendFn"
-              >{{ send }}</v-btn
+              @click="send"
+              >{{ sendBtn }}</v-btn
             >
           </div>
         </v-card>
@@ -173,8 +173,8 @@ export default {
     };
   },
   computed: {
-    send() {
-      return this.login ? "登入" : "註冊";
+    sendBtn() {
+      return this.LoginOrRegister ? "登入" : "註冊";
     },
   },
   methods: {
@@ -185,83 +185,93 @@ export default {
     loginClear() {
       this.register = false;
       this.login = true;
-      this.registerEmail = null;
-      this.registerPassword = null;
-      this.againPassword = null;
-      this.nickName = null;
-      this.registerEmailError = null;
-      this.registerPasswordError = null;
-      this.againPasswordError = null;
-      this.nickNameError = null;
+      this.resetData();
     },
     registerClear() {
       this.login = false;
       this.register = true;
+      this.resetData();
+    },
+    resetData() {
+      this.registerEmail = null;
+      this.registerEmailError = null;
+      this.registerPassword = null;
+      this.registerPasswordError = null;
+      this.againPassword = null;
+      this.againPasswordError = null;
+      this.nickName = null;
+      this.nickNameError = null;
       this.loginEmail = null;
       this.loginPassword = null;
       this.loginEmailError = null;
       this.loginPasswordError = null;
     },
-    sendFn() {
+    send() {
       if (this.login) {
         this.sendError();
-        if (
-          this.loginEmail &&
-          this.loginPassword &&
-          this.loginPassword.length >= 6
-        ) {
-          this.postSignIn({
-            email: this.loginEmail,
-            password: this.loginPassword,
-          })
-            .then(() => {
-              this.$router.push({ name: "Home" });
-            })
-            .catch((err) => {
-              console.log(err);
-              this.message = {
-                title: err.response.data.message,
-                description: `電子信箱或密碼輸入錯誤`,
-              };
-              this.$nextTick(() => {
-                this.$refs.message.message_dialog = true;
-              });
-            });
-        }
+        this.loginCheck();
       } else if (this.register) {
         this.sendError();
-        if (
-          this.registerEmail &&
-          this.nickName &&
-          this.registerPassword &&
-          this.registerPassword === this.againPassword
-        ) {
-          this.postRegister({
-            email: this.registerEmail,
-            nickname: this.nickName,
-            password: this.registerPassword,
+        this.registerCheck();
+      }
+    },
+    loginCheck() {
+      if (
+        this.loginEmail &&
+        this.loginPassword &&
+        this.loginPassword.length >= 6
+      ) {
+        this.postSignIn({
+          email: this.loginEmail,
+          password: this.loginPassword,
+        })
+          .then(() => {
+            this.$router.push({ name: "Home" });
           })
-            .then((res) => {
-              console.log(res);
-              this.loginClear();
-              this.message = {
-                title: res.data.message,
-                description: `${res.data.nickname}歡迎使用本服務！`,
-              };
-              this.$nextTick(() => {
-                this.$refs.message.message_dialog = true;
-              });
-            })
-            .catch((err) => {
-              this.message = {
-                title: err.response.data.message,
-                description: err.response.data.error[0],
-              };
-              this.$nextTick(() => {
-                this.$refs.message.message_dialog = true;
-              });
+          .catch((err) => {
+            console.log(err);
+            this.message = {
+              title: err.response.data.message,
+              description: `電子信箱或密碼輸入錯誤`,
+            };
+            this.$nextTick(() => {
+              this.$refs.message.message_dialog = true;
             });
-        }
+          });
+      }
+    },
+    registerCheck() {
+      if (
+        this.registerEmail &&
+        this.nickName &&
+        this.registerPassword &&
+        this.registerPassword === this.againPassword
+      ) {
+        this.postRegister({
+          email: this.registerEmail,
+          nickname: this.nickName,
+          password: this.registerPassword,
+        })
+          .then((res) => {
+            console.log(res);
+            this.loginClear();
+            this.message = {
+              title: res.data.message,
+              description: `${res.data.nickname}歡迎使用本服務！`,
+            };
+            this.$nextTick(() => {
+              this.$refs.message.message_dialog = true;
+            });
+          })
+          .catch((err) => {
+            this.message = {
+              title: err.response.data.message,
+              description: err.response.data.error[0],
+            };
+            this.$nextTick(() => {
+              this.$refs.message.message_dialog = true;
+            });
+          });
       }
     },
     sendError() {
