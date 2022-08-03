@@ -1,10 +1,15 @@
 import Api from '@/common/api'
 import { POST_REGISTER, POST_SIGN_IN } from './action_type'
+import { SET_TOKEN } from './mutation_type'
+import JwtService from '@/common/jwtService'
 
 const state = {
 }
 
 const mutations = {
+    [SET_TOKEN](state, payload) {
+        JwtService.saveToken(payload)
+    }
 }
 
 const actions = {
@@ -31,6 +36,9 @@ const actions = {
                     password: password
                 }
             }).then(res => {
+                console.log(res)
+                context.commit(SET_TOKEN, res.headers.authorization)
+                localStorage.setItem('nickName', res.data.nickname)
                 resolve(res)
             }).catch(err => {
                 reject(err)

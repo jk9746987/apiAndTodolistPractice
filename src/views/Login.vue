@@ -214,14 +214,11 @@ export default {
             email: this.loginEmail,
             password: this.loginPassword,
           })
-            .then((res) => {
-              let token = res.headers.authorization;
-              console.log(token);
-              localStorage.setItem("set_token", token);
-              localStorage.setItem("nickName", res.data.nickname);
+            .then(() => {
               this.$router.push({ name: "Home" });
             })
             .catch((err) => {
+              console.log(err);
               this.message = {
                 title: err.response.data.message,
                 description: `電子信箱或密碼輸入錯誤`,

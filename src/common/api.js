@@ -1,5 +1,7 @@
 import axios from 'axios'
 import router from '@/router'
+import JwtService from '@/common/jwtService'
+
 
 const config = {
     baseURL: 'https://todoo.5xcamp.us/'
@@ -32,9 +34,6 @@ const Api = {
 
 _axios.interceptors.request.use(
     function (config) {
-        if (localStorage.getItem('set_token')) {
-            _axios.defaults.headers.common['Authorization'] = localStorage.getItem('set_token')
-        }
         console.log(config)
         return config
     },
@@ -46,6 +45,9 @@ _axios.interceptors.request.use(
 
 _axios.interceptors.response.use(
     function (config) {
+        if (JwtService.getToken()) {
+            _axios.defaults.headers.common['Authorization'] = JwtService.getToken()
+        }
         console.log(config)
         return config
     },
