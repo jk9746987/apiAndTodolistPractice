@@ -36,7 +36,6 @@ const actions = {
                     password: password
                 }
             }).then(res => {
-                console.log(res)
                 context.commit(SET_TOKEN, res.headers.authorization)
                 localStorage.setItem('nickName', res.data.nickname)
                 resolve(res)

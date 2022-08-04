@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/Home.vue'
-import Login from '@/views/Login.vue'
+import Home from '@/views/Home'
+import Login from '@/views/auth/Login'
+import Register from '@/views/auth/Register'
+import Auth from '@/views/Auth'
 
 // 解決路由重覆點擊的報錯問題
 const originalPush = VueRouter.prototype.push
@@ -17,24 +19,44 @@ const routes = [
     name: 'Home',
     component: Home,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      title: 'todo'
     }
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-  }
+    path: '/auth',
+    name: 'Auth',
+    component: Auth,
+    children: [
+      {
+        path: '/login',
+        name: 'Login',
+        component: Login,
+        meta: {
+          title: 'login'
+        }
+      },
+      {
+        path: '/register',
+        name: 'Register',
+        component: Register,
+        meta: {
+          title: 'register'
+        }
+      }
+    ]
+  },
 ]
 
 const router = new VueRouter({
-  // mode: 'history',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
 
 // 登入驗證
 router.beforeEach(async (to, from, next) => {
+  window.document.title = to.meta.title
   if (to.meta.requiresAuth && !localStorage.getItem('set_token')) {
     next({ name: 'Login' })
   } else {

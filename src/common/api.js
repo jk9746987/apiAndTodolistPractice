@@ -48,20 +48,21 @@ _axios.interceptors.response.use(
         if (JwtService.getToken()) {
             _axios.defaults.headers.common['Authorization'] = JwtService.getToken()
         }
-        console.log(config)
         return config
     },
     function (error) {
         switch (error.response.status) {
             case 401:
                 router.push({ name: 'Login' })
-                localStorage.clear()
-                break;
+                _axios.defaults.headers.common['Authorization'] = ''
+                localStorage.removeItem("set_token");
+                localStorage.removeItem("nickName");
+                return Promise.reject(error)
             default:
                 return Promise.reject(error)
         }
     }
 )
 
-
+export { _axios }
 export default Api

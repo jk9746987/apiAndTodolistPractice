@@ -5,6 +5,7 @@ import {
     PUT_TODOS,
     DELETE_TODOS,
     PATCH_TODOS,
+    DELETE_SIGN_OUT
 } from './action_type'
 
 const state = {
@@ -70,6 +71,15 @@ const actions = {
             })
         })
     },
+    [DELETE_SIGN_OUT]() {
+        return new Promise((resolve, reject) => {
+            Api.delete('users/sign_out').then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    }
 }
 
 export default {

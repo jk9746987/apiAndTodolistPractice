@@ -1,17 +1,11 @@
 <template>
   <div id="app">
     <div class="top col-12 d-flex justify-space-between align-center">
-      <div>
-        <v-img
-          src="@/assets/image/logo.svg"
-          width="350"
-          class="mx-auto"
-          contain
-          alt=""
-        />
+      <div class="col-9 col-sm-8">
+        <v-img src="@/assets/image/logo.svg" width="350" contain alt="" />
       </div>
       <div class="d-flex topAndright">
-        <div class="mr-4">Hi, {{ nickName }} 您好</div>
+        <div class="mr-4 d-none d-md-block">Hi, {{ nickName }} 您好</div>
         <button @click="signOut">登出</button>
       </div>
     </div>
@@ -33,7 +27,7 @@
       <div class="todo_content rounded-lg pb-5 mb-4">
         <div class="status_container d-flex justify-space-around align-center">
           <div
-            v-for="(item, index) in status"
+            v-for="(item, index) in tab"
             :key="index"
             @click="choice_status(item, index)"
             class="col-4 text-center"
@@ -77,7 +71,7 @@
                 {{ item.content }}
               </div>
             </div>
-            <div class="button_container">
+            <div class="button_container col-3 pa-0">
               <v-icon
                 @click="editTodo(item)"
                 :disabled="item.completed_at !== null"
@@ -107,7 +101,7 @@
               :ref="`focusInput${item.id}`"
               @keyup.esc="todoField = null"
             />
-            <div class="button_container">
+            <div class="button_container col-1">
               <v-icon @click="confirmEdit(item)">mdi-check</v-icon>
               <v-icon @click="deleteTodo(item)">mdi-close</v-icon>
             </div>
@@ -116,7 +110,7 @@
           <v-divider inset class="mx-auto"></v-divider>
         </div>
         <div class="total_todo px-7 mx-2 mt-4 d-flex justify-space-between">
-          <div>共 {{ todoStatus }} 個待完成項目</div>
+          <div>共 {{ uncompleteTodo }} 個待完成項目</div>
           <button
             class="complete"
             @click="clearComplete"
@@ -127,18 +121,19 @@
         </div>
       </div>
     </div>
-    <Confirm ref="confirm" @reloadTodo="getTodo" />
+    <Confirm :deleteOne="deleteOne" ref="confirm" @reloadTodo="getTodo" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { _axios } from "@/common/api";
 import {
   GET_TODOS,
   POST_TODOS,
   PUT_TODOS,
-  DELETE_TODOS,
   PATCH_TODOS,
+  DELETE_SIGN_OUT,
 } from "@/store/action_type";
 import Confirm from "@/components/Confirm";
 export default {
@@ -151,16 +146,17 @@ export default {
       newTodo: null,
       todoField: null,
       editInput: null,
-      status: ["全部", "待完成", "已完成"],
+      tab: ["全部", "待完成", "已完成"],
       choiceStatus: "全部",
       count: 0,
       todoList: [],
       completeList: [],
+      deleteOne: false,
     };
   },
   computed: {
     ...mapState("Home", ["nickname"]),
-    todoStatus() {
+    uncompleteTodo() {
       let number = 0;
       this.filterTodoList.forEach((item) => {
         if (!item.completed_at) {
@@ -169,9 +165,14 @@ export default {
       });
       return number;
     },
+    completeTodo() {
+      return this.todoList.filter((item) => {
+        return item.completed_at !== null;
+      }).length;
+    },
     filterTodoList() {
       let choiceStatusList = [];
-      switch (this.status[this.count]) {
+      switch (this.tab[this.count]) {
         case "全部":
           return this.todoList;
         case "待完成":
@@ -192,11 +193,6 @@ export default {
           return "";
       }
     },
-    completeTodo() {
-      return this.todoList.filter((item) => {
-        return item.completed_at !== null;
-      }).length;
-    },
     nickName() {
       return localStorage.getItem("nickName");
     },
@@ -206,8 +202,8 @@ export default {
       getTodos: GET_TODOS,
       postTodos: POST_TODOS,
       putTodos: PUT_TODOS,
-      deleteTodos: DELETE_TODOS,
       patchTodos: PATCH_TODOS,
+      deleteSignOut: DELETE_SIGN_OUT,
     }),
     addTodo() {
       if (this.newTodo) {
@@ -243,15 +239,16 @@ export default {
       this.todoField = null;
     },
     deleteTodo(data) {
+      this.deleteOne = true;
       this.$nextTick(() => {
         let list = [];
         list.push(data);
-        console.log(list);
         this.$refs.confirm.confirm_dialog = true;
         this.$refs.confirm.detail = list;
       });
     },
     clearComplete() {
+      this.deleteOne = false;
       this.completeList = [];
       this.todoList.forEach((item) => {
         if (item.completed_at !== null) {
@@ -267,7 +264,6 @@ export default {
       this.getTodos()
         .then((res) => {
           this.todoList = res.data.todos;
-          console.log(this.todoList);
         })
         .catch((err) => {
           console.log(err);
@@ -275,8 +271,7 @@ export default {
     },
     toggleTodoStatus(data) {
       this.patchTodos({ id: data.id })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.getTodo();
         })
         .catch((err) => {
@@ -284,8 +279,16 @@ export default {
         });
     },
     signOut() {
-      this.$router.push({ name: "Login" });
-      localStorage.clear();
+      this.deleteSignOut()
+        .then(() => {
+          localStorage.removeItem("set_token");
+          localStorage.removeItem("nickName");
+          _axios.defaults.headers.common["Authorization"] = "";
+          this.$router.push({ name: "Login" });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   created() {
@@ -298,6 +301,7 @@ export default {
 :deep(.v-text-field__details) {
   display: none;
 }
+
 #app {
   height: 100vh;
   background: linear-gradient(
@@ -317,6 +321,12 @@ export default {
   .outside {
     width: 700px;
     margin-top: 30px;
+    @media (max-width: 960px) {
+      width: 500px;
+    }
+    @media (max-width: 600px) {
+      width: 350px;
+    }
   }
   .todo_content {
     background-color: white;
@@ -345,6 +355,17 @@ export default {
         .complete_todo {
           text-decoration: line-through;
           color: #9f9a91;
+        }
+        .txt {
+          // 當英文過多時自動換行
+          overflow-wrap: break-word;
+          width: 530px;
+          @media (max-width: 960px) {
+            width: 350px;
+          }
+          @media (max-width: 600px) {
+            width: 200px;
+          }
         }
       }
     }
