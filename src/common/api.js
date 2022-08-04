@@ -48,7 +48,6 @@ _axios.interceptors.response.use(
         if (JwtService.getToken()) {
             _axios.defaults.headers.common['Authorization'] = JwtService.getToken()
         }
-        console.log(config)
         return config
     },
     function (error) {
@@ -63,5 +62,5 @@ _axios.interceptors.response.use(
     }
 )
 
-
+export { _axios }
 export default Api

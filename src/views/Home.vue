@@ -127,12 +127,14 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { _axios } from "@/common/api";
 import {
   GET_TODOS,
   POST_TODOS,
   PUT_TODOS,
   DELETE_TODOS,
   PATCH_TODOS,
+  DELETE_SIGN_OUT,
 } from "@/store/action_type";
 import Confirm from "@/components/Confirm";
 export default {
@@ -202,6 +204,7 @@ export default {
       putTodos: PUT_TODOS,
       deleteTodos: DELETE_TODOS,
       patchTodos: PATCH_TODOS,
+      deleteSignOut: DELETE_SIGN_OUT,
     }),
     addTodo() {
       if (this.newTodo) {
@@ -278,8 +281,16 @@ export default {
         });
     },
     signOut() {
-      this.$router.push({ name: "Login" });
-      localStorage.clear();
+      this.deleteSignOut()
+        .then(() => {
+          localStorage.removeItem("set_token");
+          localStorage.removeItem("nickName");
+          _axios.defaults.headers.common["Authorization"] = "";
+          this.$router.push({ name: "Login" });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   created() {
