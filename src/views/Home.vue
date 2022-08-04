@@ -27,7 +27,7 @@
       <div class="todo_content rounded-lg pb-5 mb-4">
         <div class="status_container d-flex justify-space-around align-center">
           <div
-            v-for="(item, index) in status"
+            v-for="(item, index) in tab"
             :key="index"
             @click="choice_status(item, index)"
             class="col-4 text-center"
@@ -147,7 +147,7 @@ export default {
       newTodo: null,
       todoField: null,
       editInput: null,
-      status: ["全部", "待完成", "已完成"],
+      tab: ["全部", "待完成", "已完成"],
       choiceStatus: "全部",
       count: 0,
       todoList: [],
@@ -167,7 +167,7 @@ export default {
     },
     filterTodoList() {
       let choiceStatusList = [];
-      switch (this.status[this.count]) {
+      switch (this.tab[this.count]) {
         case "全部":
           return this.todoList;
         case "待完成":
@@ -243,7 +243,6 @@ export default {
       this.$nextTick(() => {
         let list = [];
         list.push(data);
-        console.log(list);
         this.$refs.confirm.confirm_dialog = true;
         this.$refs.confirm.detail = list;
       });
@@ -264,7 +263,6 @@ export default {
       this.getTodos()
         .then((res) => {
           this.todoList = res.data.todos;
-          console.log(this.todoList);
         })
         .catch((err) => {
           console.log(err);
@@ -272,8 +270,7 @@ export default {
     },
     toggleTodoStatus(data) {
       this.patchTodos({ id: data.id })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.getTodo();
         })
         .catch((err) => {
