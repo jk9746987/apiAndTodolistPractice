@@ -80,6 +80,7 @@
       </div>
     </v-card>
     <Message :message="message" ref="message" />
+    <loading :active.sync="isLoading"></loading>
   </div>
 </template>
 
@@ -87,9 +88,10 @@
 import { mapActions } from "vuex";
 import { POST_REGISTER } from "@/store/action_type";
 import Message from "@/components/Message";
+import Loading from "vue-loading-overlay";
 export default {
   name: "Home",
-  components: { Message },
+  components: { Message, Loading },
   data() {
     return {
       registerEmail: null,
@@ -101,6 +103,7 @@ export default {
       nickNameError: null,
       againPasswordError: null,
       message: null,
+      isLoading: false,
     };
   },
   methods: {
@@ -118,12 +121,14 @@ export default {
         this.registerPassword &&
         this.registerPassword === this.againPassword
       ) {
+        this.isLoading = true;
         this.postRegister({
           email: this.registerEmail,
           nickname: this.nickName,
           password: this.registerPassword,
         })
           .then((res) => {
+            this.isLoading = false;
             this.message = {
               title: res.data.message,
               description: `${res.data.nickname}歡迎使用本服務！`,
@@ -133,6 +138,7 @@ export default {
             });
           })
           .catch((err) => {
+            this.isLoading = false;
             this.message = {
               title: err.response.data.message,
               description: err.response.data.error[0],
