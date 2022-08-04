@@ -54,8 +54,10 @@ _axios.interceptors.response.use(
         switch (error.response.status) {
             case 401:
                 router.push({ name: 'Login' })
-                localStorage.clear()
-                break;
+                _axios.defaults.headers.common['Authorization'] = ''
+                localStorage.removeItem("set_token");
+                localStorage.removeItem("nickName");
+                return Promise.reject(error)
             default:
                 return Promise.reject(error)
         }

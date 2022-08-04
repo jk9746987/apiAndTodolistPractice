@@ -174,7 +174,7 @@ export default {
   },
   computed: {
     sendBtn() {
-      return this.LoginOrRegister ? "登入" : "註冊";
+      return this.login ? "登入" : "註冊";
     },
   },
   methods: {
