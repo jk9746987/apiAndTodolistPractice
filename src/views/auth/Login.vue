@@ -55,6 +55,7 @@
       </div>
     </v-card>
     <Message :message="message" ref="message" />
+    <loading :active.sync="isLoading"></loading>
   </div>
 </template>
 
@@ -62,9 +63,11 @@
 import { mapActions } from "vuex";
 import { POST_SIGN_IN } from "@/store/action_type";
 import Message from "@/components/Message";
+import Loading from "vue-loading-overlay";
+
 export default {
   name: "Home",
-  components: { Message },
+  components: { Message, Loading },
   data() {
     return {
       loginEmail: null,
@@ -72,6 +75,7 @@ export default {
       loginEmailError: null,
       loginPasswordError: null,
       message: null,
+      isLoading: false,
     };
   },
   methods: {
@@ -93,14 +97,17 @@ export default {
         this.loginPassword &&
         this.loginPassword.length >= 6
       ) {
+        this.isLoading = true;
         this.postSignIn({
           email: this.loginEmail,
           password: this.loginPassword,
         })
           .then(() => {
+            this.isLoading = false;
             this.$router.push({ name: "Home" });
           })
           .catch((err) => {
+            this.isLoading = false;
             this.message = {
               title: err.response.data.message,
               description: `電子信箱或密碼輸入錯誤`,
