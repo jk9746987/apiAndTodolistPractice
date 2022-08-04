@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="d-flex justify-center align-center">
-    <v-row class="col-6 d-flex justify-center align-center flex-wrap">
+    <v-row class="col-6 d-none d-md-flex justify-center align-center flex-wrap">
       <v-col class="col-12">
         <v-img
           src="@/assets/image/logo.svg"
@@ -19,7 +19,7 @@
         />
       </v-col>
     </v-row>
-    <v-row class="col-6">
+    <v-row class="col-12 col-md-6">
       <v-col>
         <!-- #elevation標籤可更改陰影 -->
         <v-card

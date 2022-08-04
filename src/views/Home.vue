@@ -1,17 +1,11 @@
 <template>
   <div id="app">
     <div class="top col-12 d-flex justify-space-between align-center">
-      <div>
-        <v-img
-          src="@/assets/image/logo.svg"
-          width="350"
-          class="mx-auto"
-          contain
-          alt=""
-        />
+      <div class="col-9 col-sm-8">
+        <v-img src="@/assets/image/logo.svg" width="350" contain alt="" />
       </div>
       <div class="d-flex topAndright">
-        <div class="mr-4">Hi, {{ nickName }} 您好</div>
+        <div class="mr-4 d-none d-md-block">Hi, {{ nickName }} 您好</div>
         <button @click="signOut">登出</button>
       </div>
     </div>
@@ -77,7 +71,7 @@
                 {{ item.content }}
               </div>
             </div>
-            <div class="button_container">
+            <div class="button_container col-3 pa-0">
               <v-icon
                 @click="editTodo(item)"
                 :disabled="item.completed_at !== null"
@@ -107,7 +101,7 @@
               :ref="`focusInput${item.id}`"
               @keyup.esc="todoField = null"
             />
-            <div class="button_container">
+            <div class="button_container col-1">
               <v-icon @click="confirmEdit(item)">mdi-check</v-icon>
               <v-icon @click="deleteTodo(item)">mdi-close</v-icon>
             </div>
@@ -298,6 +292,7 @@ export default {
 :deep(.v-text-field__details) {
   display: none;
 }
+
 #app {
   height: 100vh;
   background: linear-gradient(
@@ -317,6 +312,12 @@ export default {
   .outside {
     width: 700px;
     margin-top: 30px;
+    @media (max-width: 960px) {
+      width: 500px;
+    }
+    @media (max-width: 600px) {
+      width: 350px;
+    }
   }
   .todo_content {
     background-color: white;
@@ -345,6 +346,17 @@ export default {
         .complete_todo {
           text-decoration: line-through;
           color: #9f9a91;
+        }
+        .txt {
+          // 當英文過多時自動換行
+          overflow-wrap: break-word;
+          width: 530px;
+          @media (max-width: 960px) {
+            width: 350px;
+          }
+          @media (max-width: 600px) {
+            width: 200px;
+          }
         }
       }
     }
