@@ -110,7 +110,7 @@
           <v-divider inset class="mx-auto"></v-divider>
         </div>
         <div class="total_todo px-7 mx-2 mt-4 d-flex justify-space-between">
-          <div>共 {{ todoStatus }} 個待完成項目</div>
+          <div>共 {{ uncompleteTodo }} 個待完成項目</div>
           <button
             class="complete"
             @click="clearComplete"
@@ -121,7 +121,7 @@
         </div>
       </div>
     </div>
-    <Confirm ref="confirm" @reloadTodo="getTodo" />
+    <Confirm :deleteOne="deleteOne" ref="confirm" @reloadTodo="getTodo" />
   </div>
 </template>
 
@@ -132,7 +132,6 @@ import {
   GET_TODOS,
   POST_TODOS,
   PUT_TODOS,
-  DELETE_TODOS,
   PATCH_TODOS,
   DELETE_SIGN_OUT,
 } from "@/store/action_type";
@@ -152,11 +151,12 @@ export default {
       count: 0,
       todoList: [],
       completeList: [],
+      deleteOne: false,
     };
   },
   computed: {
     ...mapState("Home", ["nickname"]),
-    todoStatus() {
+    uncompleteTodo() {
       let number = 0;
       this.filterTodoList.forEach((item) => {
         if (!item.completed_at) {
@@ -164,6 +164,11 @@ export default {
         }
       });
       return number;
+    },
+    completeTodo() {
+      return this.todoList.filter((item) => {
+        return item.completed_at !== null;
+      }).length;
     },
     filterTodoList() {
       let choiceStatusList = [];
@@ -188,11 +193,6 @@ export default {
           return "";
       }
     },
-    completeTodo() {
-      return this.todoList.filter((item) => {
-        return item.completed_at !== null;
-      }).length;
-    },
     nickName() {
       return localStorage.getItem("nickName");
     },
@@ -202,7 +202,6 @@ export default {
       getTodos: GET_TODOS,
       postTodos: POST_TODOS,
       putTodos: PUT_TODOS,
-      deleteTodos: DELETE_TODOS,
       patchTodos: PATCH_TODOS,
       deleteSignOut: DELETE_SIGN_OUT,
     }),
@@ -240,6 +239,7 @@ export default {
       this.todoField = null;
     },
     deleteTodo(data) {
+      this.deleteOne = true;
       this.$nextTick(() => {
         let list = [];
         list.push(data);
@@ -248,6 +248,7 @@ export default {
       });
     },
     clearComplete() {
+      this.deleteOne = false;
       this.completeList = [];
       this.todoList.forEach((item) => {
         if (item.completed_at !== null) {
