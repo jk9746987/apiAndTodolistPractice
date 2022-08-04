@@ -276,32 +276,26 @@ export default {
     },
     sendError() {
       if (this.login) {
-        !this.loginEmail
-          ? (this.loginEmailError = "此欄位不可為空")
-          : (this.loginEmailError = null);
-        !this.loginPassword
-          ? (this.loginPasswordError = "此欄位不可為空")
+        this.loginEmailError = !this.loginEmail ? "此欄位不可為空" : null;
+        this.loginPasswordError = !this.loginPassword
+          ? "此欄位不可為空"
           : this.loginPassword.length < 6
-          ? (this.loginPasswordError = "不可小於6碼")
-          : (this.loginPasswordError = null);
+          ? "不可小於6碼"
+          : null;
       } else if (this.register) {
-        !this.registerEmail
-          ? (this.registerEmailError = "此欄位不可為空")
-          : (this.registerEmailError = null);
-        !this.nickName
-          ? (this.nickNameError = "此欄位不可為空")
-          : (this.nickNameError = null);
-        !this.registerPassword
-          ? (this.registerPasswordError = "此欄位不可為空")
+        this.registerEmailError = !this.registerEmail ? "此欄位不可為空" : null;
+        this.nickNameError = !this.nickName ? "此欄位不可為空" : null;
+        this.registerPasswordError = !this.registerPassword
+          ? "此欄位不可為空"
           : this.registerPassword.length < 6
-          ? (this.registerPasswordError = "不可小於6碼")
-          : (this.registerPasswordError = null);
-        !this.againPassword
-          ? (this.againPasswordError = "此欄位不可為空")
+          ? "不可小於6碼"
+          : null;
+        this.againPasswordError = !this.againPassword
+          ? "此欄位不可為空"
           : this.againPassword.length > 0 &&
             this.againPassword !== this.registerPassword
-          ? (this.againPasswordError = "再次輸入密碼錯誤")
-          : (this.againPasswordError = null);
+          ? "再次輸入密碼錯誤"
+          : null;
       }
     },
   },
