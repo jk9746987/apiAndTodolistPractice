@@ -2,10 +2,10 @@
   <v-row justify="center">
     <v-dialog v-model="confirm_dialog" max-width="350">
       <v-card color="#ffd370">
-        <v-card-title class="justify-center pb-2" v-if="listLength === 1">
-          確定要刪除此待辦事項嗎？
+        <v-card-title class="justify-center pb-2" v-if="deleteOne">
+          確定要刪除此項事項嗎？
         </v-card-title>
-        <v-card-title class="justify-center pb-2" v-else>
+        <v-card-title class="justify-center pb-2" v-if="!deleteOne">
           確定要刪除這 {{ listLength }} 項事項嗎？
         </v-card-title>
         <v-card-actions class="justify-space-around pb-5 pt-0 col-8 mx-auto">
@@ -22,6 +22,7 @@ import { mapActions } from "vuex";
 import { DELETE_TODOS } from "@/store/action_type";
 export default {
   name: "confirm",
+  props: ["deleteOne"],
   data() {
     return {
       confirm_dialog: false,
@@ -38,7 +39,6 @@ export default {
   methods: {
     ...mapActions("Home", { deleteTodos: DELETE_TODOS }),
     deleteTodo() {
-      console.log(this.detail);
       Promise.all(
         this.detail.map((item) => {
           return this.deleteTodos({
