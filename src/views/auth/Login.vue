@@ -77,7 +77,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("Login", {
+    ...mapActions("Auth", {
       postSignIn: POST_SIGN_IN,
     }),
     resetData() {

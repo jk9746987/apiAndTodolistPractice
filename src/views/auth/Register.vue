@@ -106,7 +106,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("Login", {
+    ...mapActions("Auth", {
       postRegister: POST_REGISTER,
     }),
     send() {
