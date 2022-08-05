@@ -4,54 +4,57 @@
     <v-card
       color="transparent"
       elevation="0"
-      max-width="400"
-      class="mx-auto auth_container"
+      class="auth_container d-flex justify-center"
     >
-      <div class="mb-4 text-h5 title text-center col-12">線上代辦事項紀錄</div>
-      <div class="tab_container col-12 d-flex justify-center">
-        <div class="d-flex justify-center pr-3">
-          <span class="auth_button btn_login choice">登入</span>
+      <div class="inner">
+        <div class="mb-4 text-h5 title text-center col-12">
+          線上代辦事項紀錄
         </div>
-        <div class="d-flex justify-center pl-3">
-          <router-link :to="{ name: 'Register' }" class="auth_button"
-            >註冊帳號</router-link
+        <div class="tab_container col-12 mb-4 d-flex justify-center">
+          <div class="d-flex justify-center pr-3">
+            <span class="auth_button btn_login choice">登入</span>
+          </div>
+          <div class="d-flex justify-center pl-3">
+            <router-link :to="{ name: 'Register' }" class="auth_button"
+              >註冊帳號</router-link
+            >
+          </div>
+        </div>
+        <div class="form">
+          <div class="input_container">
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="Email"
+              v-model="loginEmail"
+              filled
+              clearable
+            ></v-text-field>
+            <div class="null_remind mx-auto">{{ loginEmailError }}</div>
+          </div>
+          <div class="input_container">
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="密碼"
+              v-model="loginPassword"
+              filled
+              clearable
+              placeholder="不可小於6碼"
+            ></v-text-field>
+            <div class="null_remind mx-auto">{{ loginPasswordError }}</div>
+          </div>
+        </div>
+        <div class="col-12 d-flex justify-center">
+          <v-btn
+            class="white--text rounded-lg"
+            width="300"
+            height="50"
+            color="#333333"
+            @click="send"
+            >登入</v-btn
           >
         </div>
-      </div>
-      <div class="form">
-        <div class="input_container">
-          <v-text-field
-            background-color="white"
-            class="input rounded-lg mx-auto"
-            label="Email"
-            v-model="loginEmail"
-            filled
-            clearable
-          ></v-text-field>
-          <div class="null_remind mx-auto">{{ loginEmailError }}</div>
-        </div>
-        <div class="input_container">
-          <v-text-field
-            background-color="white"
-            class="input rounded-lg mx-auto"
-            label="密碼"
-            v-model="loginPassword"
-            filled
-            clearable
-            placeholder="不可小於6碼"
-          ></v-text-field>
-          <div class="null_remind mx-auto">{{ loginPasswordError }}</div>
-        </div>
-      </div>
-      <div class="col-12 d-flex justify-center">
-        <v-btn
-          class="white--text rounded-lg"
-          width="300"
-          height="50"
-          color="#333333"
-          @click="send"
-          >登入</v-btn
-        >
       </div>
     </v-card>
     <Message :message="message" ref="message" />
@@ -140,7 +143,7 @@ export default {
 }
 
 .auth_container {
-  height: 600px;
+  height: 650px;
   .tab_container {
     .auth_button {
       width: 120px;
@@ -173,13 +176,11 @@ export default {
     font-family: "NotoSansTC" !important;
   }
   .form {
-    width: 400px;
     padding-bottom: 0;
     .input {
       width: 300px !important;
     }
     .input_container {
-      position: relative;
       margin-bottom: 10px;
       .null_remind {
         color: #d87355;

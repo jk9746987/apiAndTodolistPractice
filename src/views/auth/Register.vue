@@ -4,79 +4,82 @@
     <v-card
       color="transparent"
       elevation="0"
-      max-width="400"
-      class="mx-auto auth_container"
+      class="auth_container d-flex justify-center"
     >
-      <div class="mb-4 text-h5 title text-center col-12">線上代辦事項紀錄</div>
-      <div class="tab_container col-12 d-flex justify-center">
-        <div class="d-flex justify-center pr-3">
-          <router-link :to="{ name: 'Login' }" class="auth_button btn_login"
-            >登入</router-link
-          >
+      <div class="inner">
+        <div class="mb-4 text-h5 title text-center col-12">
+          線上代辦事項紀錄
         </div>
-        <div class="d-flex justify-center pl-3">
-          <span class="auth_button choice">註冊帳號</span>
-        </div>
-      </div>
-      <div class="form">
-        <div class="input_container">
-          <v-text-field
-            background-color="white"
-            class="input rounded-lg mx-auto"
-            label="Email"
-            v-model="registerEmail"
-            filled
-            clearable
-          ></v-text-field>
-          <div class="null_remind mx-auto">{{ registerEmailError }}</div>
-        </div>
-        <div class="input_container">
-          <v-text-field
-            background-color="white"
-            class="input rounded-lg mx-auto"
-            label="您的暱稱"
-            v-model="nickName"
-            filled
-            clearable
-          ></v-text-field>
-          <div class="null_remind mx-auto">{{ nickNameError }}</div>
-        </div>
-        <div class="input_container">
-          <v-text-field
-            background-color="white"
-            class="input rounded-lg mx-auto"
-            label="密碼"
-            v-model="registerPassword"
-            filled
-            clearable
-            placeholder="不可小於6碼"
-          ></v-text-field>
-          <div class="null_remind mx-auto">
-            {{ registerPasswordError }}
+        <div class="tab_container col-12 d-flex mb-4 justify-center">
+          <div class="d-flex justify-center pr-3">
+            <router-link :to="{ name: 'Login' }" class="auth_button btn_login"
+              >登入</router-link
+            >
+          </div>
+          <div class="d-flex justify-center pl-3">
+            <span class="auth_button choice">註冊帳號</span>
           </div>
         </div>
-        <div class="input_container">
-          <v-text-field
-            background-color="white"
-            class="input rounded-lg mx-auto"
-            label="再次輸入密碼"
-            v-model="againPassword"
-            filled
-            clearable
-            placeholder="不可小於6碼"
-          ></v-text-field>
-          <div class="null_remind mx-auto">{{ againPasswordError }}</div>
+        <div class="form">
+          <div class="input_container">
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="Email"
+              v-model="registerEmail"
+              filled
+              clearable
+            ></v-text-field>
+            <div class="null_remind mx-auto">{{ registerEmailError }}</div>
+          </div>
+          <div class="input_container">
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="您的暱稱"
+              v-model="nickName"
+              filled
+              clearable
+            ></v-text-field>
+            <div class="null_remind mx-auto">{{ nickNameError }}</div>
+          </div>
+          <div class="input_container">
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="密碼"
+              v-model="registerPassword"
+              filled
+              clearable
+              placeholder="不可小於6碼"
+            ></v-text-field>
+            <div class="null_remind mx-auto">
+              {{ registerPasswordError }}
+            </div>
+          </div>
+          <div class="input_container">
+            <v-text-field
+              background-color="white"
+              class="input rounded-lg mx-auto"
+              label="再次輸入密碼"
+              v-model="againPassword"
+              filled
+              clearable
+              placeholder="不可小於6碼"
+            ></v-text-field>
+            <div class="null_remind mx-auto">{{ againPasswordError }}</div>
+          </div>
         </div>
-      </div>
-      <div class="col-12 d-flex justify-center">
-        <v-btn
-          class="white--text rounded-lg"
-          width="300"
-          height="50"
-          color="#333333"
-          @click="send"
-          >註冊</v-btn
-        >
+        <div class="col-12 d-flex justify-center">
+          <v-btn
+            class="white--text rounded-lg"
+            width="300"
+            height="50"
+            color="#333333"
+            @click="send"
+            >註冊</v-btn
+          >
+        </div>
       </div>
     </v-card>
     <Message :message="message" ref="message" />
@@ -177,7 +180,7 @@ export default {
   transform: translateY(-15px) scale(0.75);
 }
 .auth_container {
-  height: 600px;
+  height: 650px;
   .tab_container {
     .auth_button {
       width: 120px;
@@ -210,7 +213,6 @@ export default {
     font-family: "NotoSansTC" !important;
   }
   .form {
-    width: 400px;
     padding-bottom: 0;
     .input {
       width: 300px !important;
