@@ -50,5 +50,6 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "start": "webpack-dev-server --inline --content-base . --history-api-fallback"
 }
