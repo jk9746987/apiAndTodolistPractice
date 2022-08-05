@@ -92,6 +92,7 @@ export default {
       this.loginPasswordError = null;
     },
     send() {
+      this.sendError();
       this.loginSend();
     },
     loginSend() {
@@ -181,6 +182,7 @@ export default {
       width: 300px !important;
     }
     .input_container {
+      position: relative;
       margin-bottom: 10px;
       .null_remind {
         color: #d87355;

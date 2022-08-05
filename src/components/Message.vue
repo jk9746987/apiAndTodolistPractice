@@ -40,6 +40,16 @@ export default {
       return this.message ? this.message.description : null;
     },
   },
+  watch: {
+    message_dialog: {
+      handler(n) {
+        if (n === false && this.title === "註冊成功") {
+          this.$router.push({ name: "Login" });
+        }
+      },
+      immediate: true,
+    },
+  },
 };
 </script>
 
