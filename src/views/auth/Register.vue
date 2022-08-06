@@ -46,11 +46,14 @@
           <div class="input_container">
             <v-text-field
               background-color="white"
-              class="input rounded-lg mx-auto"
-              label="密碼"
-              v-model="registerPassword"
               filled
               clearable
+              v-model="registerPassword"
+              :append-icon="registerPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="registerPasswordShow ? 'text' : 'password'"
+              label="密碼"
+              class="input rounded-lg mx-auto"
+              @click:append="registerPasswordShow = !registerPasswordShow"
               placeholder="不可小於6碼"
             ></v-text-field>
             <div class="null_remind mx-auto">
@@ -60,11 +63,14 @@
           <div class="input_container">
             <v-text-field
               background-color="white"
-              class="input rounded-lg mx-auto"
-              label="再次輸入密碼"
-              v-model="againPassword"
               filled
               clearable
+              v-model="againPassword"
+              :append-icon="againPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="againPasswordShow ? 'text' : 'password'"
+              label="再次輸入密碼"
+              class="input rounded-lg mx-auto"
+              @click:append="againPasswordShow = !againPasswordShow"
               placeholder="不可小於6碼"
             ></v-text-field>
             <div class="null_remind mx-auto">{{ againPasswordError }}</div>
@@ -107,6 +113,8 @@ export default {
       againPasswordError: null,
       message: null,
       isLoading: false,
+      registerPasswordShow: false,
+      againPasswordShow: false,
     };
   },
   methods: {

@@ -35,11 +35,14 @@
           <div class="input_container">
             <v-text-field
               background-color="white"
-              class="input rounded-lg mx-auto"
-              label="密碼"
-              v-model="loginPassword"
               filled
               clearable
+              v-model="loginPassword"
+              :append-icon="loginPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="loginPasswordShow ? 'text' : 'password'"
+              label="密碼"
+              class="input rounded-lg mx-auto"
+              @click:append="loginPasswordShow = !loginPasswordShow"
               placeholder="不可小於6碼"
             ></v-text-field>
             <div class="null_remind mx-auto">{{ loginPasswordError }}</div>
@@ -79,6 +82,7 @@ export default {
       loginPasswordError: null,
       message: null,
       isLoading: false,
+      loginPasswordShow: false,
     };
   },
   methods: {
