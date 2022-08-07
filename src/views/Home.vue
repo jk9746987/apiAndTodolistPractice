@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import { _axios } from "@/common/api";
 import {
   GET_TODOS,
@@ -134,7 +134,9 @@ import {
   PUT_TODOS,
   PATCH_TODOS,
   DELETE_SIGN_OUT,
+  GET_CHECK,
 } from "@/store/action_type";
+import { CHECK_LOGIN } from "@/store/mutation_type";
 import Confirm from "@/components/Confirm";
 export default {
   name: "todo",
@@ -156,6 +158,7 @@ export default {
   },
   computed: {
     ...mapState("Home", ["nickname"]),
+    ...mapState(["isLogin"]),
     uncompleteTodo() {
       let number = 0;
       this.filterTodoList.forEach((item) => {
@@ -205,6 +208,10 @@ export default {
       patchTodos: PATCH_TODOS,
       deleteSignOut: DELETE_SIGN_OUT,
     }),
+    ...mapActions({
+      getCheck: GET_CHECK,
+    }),
+    ...mapMutations({ checkLogin: CHECK_LOGIN }),
     addTodo() {
       if (this.newTodo) {
         this.postTodos({
@@ -281,18 +288,23 @@ export default {
     signOut() {
       this.deleteSignOut()
         .then(() => {
-          localStorage.removeItem("set_token");
-          localStorage.removeItem("nickName");
-          _axios.defaults.headers.common["Authorization"] = "";
-          this.$router.push({ name: "Login" });
+          this.clearLogin();
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    clearLogin() {
+      localStorage.removeItem("set_token");
+      localStorage.removeItem("nickName");
+      _axios.defaults.headers.common["Authorization"] = "";
+      this.$router.push({ name: "Login" });
+      this.checkLogin(false);
+    },
   },
-  created() {
-    this.getTodo();
+  async mounted() {
+    await this.getCheck();
+    (await this.isLogin) ? this.getTodo() : this.clearLogin();
   },
 };
 </script>

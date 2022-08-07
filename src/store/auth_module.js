@@ -28,6 +28,8 @@ const actions = {
             })
         })
     },
+    // 可用來使用index的mutation
+    // context.commit(CHECK_LOGIN, true, { root: true })
     [POST_SIGN_IN](context, { email, password }) {
         return new Promise((resolve, reject) => {
             Api.post('users/sign_in', {
