@@ -26,29 +26,29 @@
               background-color="white"
               class="input rounded-lg mx-auto"
               label="Email"
-              v-model="registerEmail"
+              v-model="register.email"
               filled
               clearable
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ registerEmailError }}</div>
+            <div class="null_remind mx-auto">{{ error.email }}</div>
           </div>
           <div class="input_container">
             <v-text-field
               background-color="white"
               class="input rounded-lg mx-auto"
               label="您的暱稱"
-              v-model="nickName"
+              v-model="register.nickName"
               filled
               clearable
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ nickNameError }}</div>
+            <div class="null_remind mx-auto">{{ error.nickName }}</div>
           </div>
           <div class="input_container">
             <v-text-field
               background-color="white"
               filled
               clearable
-              v-model="registerPassword"
+              v-model="register.password"
               :append-icon="registerPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
               :type="registerPasswordShow ? 'text' : 'password'"
               label="密碼"
@@ -57,7 +57,7 @@
               placeholder="不可小於6碼"
             ></v-text-field>
             <div class="null_remind mx-auto">
-              {{ registerPasswordError }}
+              {{ error.password }}
             </div>
           </div>
           <div class="input_container">
@@ -65,7 +65,7 @@
               background-color="white"
               filled
               clearable
-              v-model="againPassword"
+              v-model="register.again"
               :append-icon="againPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
               :type="againPasswordShow ? 'text' : 'password'"
               label="再次輸入密碼"
@@ -73,7 +73,7 @@
               @click:append="againPasswordShow = !againPasswordShow"
               placeholder="不可小於6碼"
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ againPasswordError }}</div>
+            <div class="null_remind mx-auto">{{ error.again }}</div>
           </div>
         </div>
         <div class="col-12 d-flex justify-center">
@@ -82,7 +82,7 @@
             width="300"
             height="50"
             color="#333333"
-            @click="send"
+            @click="sendBtn"
             >註冊</v-btn
           >
         </div>
@@ -99,14 +99,26 @@ import { POST_REGISTER } from "@/store/action_type";
 import Message from "@/components/Message";
 import Loading from "vue-loading-overlay";
 export default {
-  name: "Home",
+  name: "Register",
   components: { Message, Loading },
   data() {
     return {
+      register: {
+        email: "",
+        password: "",
+        again: "",
+        nickName: "",
+      },
       registerEmail: null,
       registerPassword: null,
       againPassword: null,
       nickName: null,
+      error: {
+        email: "",
+        password: "",
+        again: "",
+        nickName: "",
+      },
       registerEmailError: null,
       registerPasswordError: null,
       nickNameError: null,
@@ -121,22 +133,22 @@ export default {
     ...mapActions("Auth", {
       postRegister: POST_REGISTER,
     }),
-    send() {
+    sendBtn() {
       this.sendError();
       this.registerSend();
     },
     registerSend() {
       if (
-        this.registerEmail &&
-        this.nickName &&
-        this.registerPassword &&
-        this.registerPassword === this.againPassword
+        this.register.email &&
+        this.register.nickName &&
+        this.register.password &&
+        this.register.password === this.register.again
       ) {
         this.isLoading = true;
         this.postRegister({
-          email: this.registerEmail,
-          nickname: this.nickName,
-          password: this.registerPassword,
+          email: this.register.email,
+          nickname: this.register.nickName,
+          password: this.register.password,
         })
           .then((res) => {
             this.isLoading = false;
@@ -161,19 +173,19 @@ export default {
       }
     },
     sendError() {
-      this.registerEmailError = !this.registerEmail ? "此欄位不可為空" : null;
-      this.nickNameError = !this.nickName ? "此欄位不可為空" : null;
-      this.registerPasswordError = !this.registerPassword
+      this.error.email = !this.register.email ? "此欄位不可為空" : "";
+      this.error.nickName = !this.register.nickName ? "此欄位不可為空" : "";
+      this.error.password = !this.register.password
         ? "此欄位不可為空"
-        : this.registerPassword.length < 6
+        : this.register.password.length < 6
         ? "不可小於6碼"
-        : null;
-      this.againPasswordError = !this.againPassword
+        : "";
+      this.error.again = !this.register.again
         ? "此欄位不可為空"
-        : this.againPassword.length > 0 &&
-          this.againPassword !== this.registerPassword
+        : this.register.again.length > 0 &&
+          this.register.again !== this.register.password
         ? "再次輸入密碼錯誤"
-        : null;
+        : "";
     },
   },
 };

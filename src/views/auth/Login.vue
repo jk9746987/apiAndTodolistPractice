@@ -26,18 +26,18 @@
               background-color="white"
               class="input rounded-lg mx-auto"
               label="Email"
-              v-model="loginEmail"
+              v-model="login.email"
               filled
               clearable
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ loginEmailError }}</div>
+            <div class="null_remind mx-auto">{{ error.email }}</div>
           </div>
           <div class="input_container">
             <v-text-field
               background-color="white"
               filled
               clearable
-              v-model="loginPassword"
+              v-model="login.password"
               :append-icon="loginPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
               :type="loginPasswordShow ? 'text' : 'password'"
               label="密碼"
@@ -45,7 +45,7 @@
               @click:append="loginPasswordShow = !loginPasswordShow"
               placeholder="不可小於6碼"
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ loginPasswordError }}</div>
+            <div class="null_remind mx-auto">{{ error.password }}</div>
           </div>
         </div>
         <div class="col-12 d-flex justify-center">
@@ -54,7 +54,7 @@
             width="300"
             height="50"
             color="#333333"
-            @click="send"
+            @click="sendBtn"
             >登入</v-btn
           >
         </div>
@@ -72,14 +72,18 @@ import Message from "@/components/Message";
 import Loading from "vue-loading-overlay";
 
 export default {
-  name: "Home",
+  name: "Login",
   components: { Message, Loading },
   data() {
     return {
-      loginEmail: null,
-      loginPassword: null,
-      loginEmailError: null,
-      loginPasswordError: null,
+      login: {
+        email: "",
+        password: "",
+      },
+      error: {
+        email: "",
+        password: "",
+      },
       message: null,
       isLoading: false,
       loginPasswordShow: false,
@@ -90,25 +94,25 @@ export default {
       postSignIn: POST_SIGN_IN,
     }),
     resetData() {
-      this.loginEmail = null;
-      this.loginPassword = null;
-      this.loginEmailError = null;
-      this.loginPasswordError = null;
+      this.login.email = "";
+      this.login.password = "";
+      this.error.email = "";
+      this.error.password = "";
     },
-    send() {
+    sendBtn() {
       this.sendError();
       this.loginSend();
     },
     loginSend() {
       if (
-        this.loginEmail &&
-        this.loginPassword &&
-        this.loginPassword.length >= 6
+        this.login.email &&
+        this.login.password &&
+        this.login.password.length >= 6
       ) {
         this.isLoading = true;
         this.postSignIn({
-          email: this.loginEmail,
-          password: this.loginPassword,
+          email: this.login.email,
+          password: this.login.password,
         })
           .then(() => {
             this.isLoading = false;
@@ -127,12 +131,12 @@ export default {
       }
     },
     sendError() {
-      this.loginEmailError = !this.loginEmail ? "此欄位不可為空" : null;
-      this.loginPasswordError = !this.loginPassword
+      this.error.email = !this.login.email ? "此欄位不可為空" : "";
+      this.error.password = !this.login.password
         ? "此欄位不可為空"
-        : this.loginPassword.length < 6
+        : this.login.password.length < 6
         ? "不可小於6碼"
-        : null;
+        : "";
     },
   },
 };
