@@ -20,9 +20,10 @@
             >
           </div>
         </div>
-        <div class="form">
+        <form class="form">
           <div class="input_container">
             <v-text-field
+              autocomplete="off"
               background-color="white"
               class="input rounded-lg mx-auto"
               label="Email"
@@ -34,6 +35,7 @@
           </div>
           <div class="input_container">
             <v-text-field
+              autocomplete="off"
               background-color="white"
               filled
               clearable
@@ -47,7 +49,7 @@
             ></v-text-field>
             <div class="null_remind mx-auto">{{ error.password }}</div>
           </div>
-        </div>
+        </form>
         <div class="col-12 d-flex justify-center">
           <v-btn
             class="white--text rounded-lg"
