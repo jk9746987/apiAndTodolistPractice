@@ -10,73 +10,85 @@
         <div class="mb-4 text-h5 title text-center col-12">
           線上代辦事項紀錄
         </div>
-        <div class="tab_container col-12 d-flex mb-4 justify-center">
+        <div class="tab col-12 d-flex mb-4 justify-center">
           <div class="d-flex justify-center pr-3">
-            <router-link :to="{ name: 'Login' }" class="auth_button btn_login"
+            <router-link
+              :to="{ name: 'Login' }"
+              class="tab__button tab__button__login"
               >登入</router-link
             >
           </div>
           <div class="d-flex justify-center pl-3">
-            <span class="auth_button choice">註冊帳號</span>
+            <span class="tab__button tab__button--active">註冊帳號</span>
           </div>
         </div>
-        <div class="form">
-          <div class="input_container">
+        <v-form class="form">
+          <div class="form__item">
             <v-text-field
+              autocomplete="off"
               background-color="white"
-              class="input rounded-lg mx-auto"
+              class="form__item__input rounded-lg mx-auto"
               label="Email"
-              v-model="registerEmail"
+              v-model="register.email"
               filled
               clearable
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ registerEmailError }}</div>
+            <div class="form__item--error mx-auto">{{ error.email }}</div>
           </div>
-          <div class="input_container">
+          <div class="form__item">
             <v-text-field
+              autocomplete="off"
               background-color="white"
-              class="input rounded-lg mx-auto"
+              class="form__item__input rounded-lg mx-auto"
               label="您的暱稱"
-              v-model="nickName"
+              v-model="register.nickName"
               filled
               clearable
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ nickNameError }}</div>
+            <div class="form__item--error mx-auto">{{ error.nickName }}</div>
           </div>
-          <div class="input_container">
+          <div class="form__item">
             <v-text-field
+              autocomplete="off"
               background-color="white"
-              class="input rounded-lg mx-auto"
-              label="密碼"
-              v-model="registerPassword"
               filled
               clearable
+              v-model="register.password"
+              :append-icon="registerPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="registerPasswordShow ? 'text' : 'password'"
+              label="密碼"
+              class="form__item__input rounded-lg mx-auto"
+              @click:append="registerPasswordShow = !registerPasswordShow"
               placeholder="不可小於6碼"
             ></v-text-field>
-            <div class="null_remind mx-auto">
-              {{ registerPasswordError }}
+            <div class="form__item--error mx-auto">
+              {{ error.password }}
             </div>
           </div>
-          <div class="input_container">
+          <div class="form__item">
             <v-text-field
+              autocomplete="off"
               background-color="white"
-              class="input rounded-lg mx-auto"
-              label="再次輸入密碼"
-              v-model="againPassword"
               filled
               clearable
+              v-model="register.again"
+              :append-icon="againPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="againPasswordShow ? 'text' : 'password'"
+              label="再次輸入密碼"
+              class="form__item__input rounded-lg mx-auto"
+              @click:append="againPasswordShow = !againPasswordShow"
               placeholder="不可小於6碼"
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ againPasswordError }}</div>
+            <div class="form__item--error mx-auto">{{ error.again }}</div>
           </div>
-        </div>
+        </v-form>
         <div class="col-12 d-flex justify-center">
           <v-btn
             class="white--text rounded-lg"
             width="300"
             height="50"
             color="#333333"
-            @click="send"
+            @click="sendBtn"
             >註冊</v-btn
           >
         </div>
@@ -93,42 +105,56 @@ import { POST_REGISTER } from "@/store/action_type";
 import Message from "@/components/Message";
 import Loading from "vue-loading-overlay";
 export default {
-  name: "Home",
+  name: "Register",
   components: { Message, Loading },
   data() {
     return {
+      register: {
+        email: "",
+        password: "",
+        again: "",
+        nickName: "",
+      },
       registerEmail: null,
       registerPassword: null,
       againPassword: null,
       nickName: null,
+      error: {
+        email: "",
+        password: "",
+        again: "",
+        nickName: "",
+      },
       registerEmailError: null,
       registerPasswordError: null,
       nickNameError: null,
       againPasswordError: null,
       message: null,
       isLoading: false,
+      registerPasswordShow: false,
+      againPasswordShow: false,
     };
   },
   methods: {
     ...mapActions("Auth", {
       postRegister: POST_REGISTER,
     }),
-    send() {
+    sendBtn() {
       this.sendError();
       this.registerSend();
     },
     registerSend() {
       if (
-        this.registerEmail &&
-        this.nickName &&
-        this.registerPassword &&
-        this.registerPassword === this.againPassword
+        this.register.email &&
+        this.register.nickName &&
+        this.register.password &&
+        this.register.password === this.register.again
       ) {
         this.isLoading = true;
         this.postRegister({
-          email: this.registerEmail,
-          nickname: this.nickName,
-          password: this.registerPassword,
+          email: this.register.email,
+          nickname: this.register.nickName,
+          password: this.register.password,
         })
           .then((res) => {
             this.isLoading = false;
@@ -153,19 +179,19 @@ export default {
       }
     },
     sendError() {
-      this.registerEmailError = !this.registerEmail ? "此欄位不可為空" : null;
-      this.nickNameError = !this.nickName ? "此欄位不可為空" : null;
-      this.registerPasswordError = !this.registerPassword
+      this.error.email = !this.register.email ? "此欄位不可為空" : "";
+      this.error.nickName = !this.register.nickName ? "此欄位不可為空" : "";
+      this.error.password = !this.register.password
         ? "此欄位不可為空"
-        : this.registerPassword.length < 6
+        : this.register.password.length < 6
         ? "不可小於6碼"
-        : null;
-      this.againPasswordError = !this.againPassword
+        : "";
+      this.error.again = !this.register.again
         ? "此欄位不可為空"
-        : this.againPassword.length > 0 &&
-          this.againPassword !== this.registerPassword
+        : this.register.again.length > 0 &&
+          this.register.again !== this.register.password
         ? "再次輸入密碼錯誤"
-        : null;
+        : "";
     },
   },
 };
@@ -179,54 +205,57 @@ export default {
 :deep(.v-label--active) {
   transform: translateY(-15px) scale(0.75);
 }
+
 .auth_container {
   height: 650px;
-  .tab_container {
-    .auth_button {
-      width: 120px;
-      height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      margin: 5px;
-      color: rgba(0, 0, 0, 0.87);
-      text-decoration: none;
-    }
-    .choice {
-      background-color: #333333;
-      border-radius: 10px;
-      color: white;
-    }
-    .btn_login::after {
-      content: "";
-      width: 2px;
-      height: 55px;
-      background-color: #333333;
-      position: relative;
-      right: -61px;
-      top: 0;
-    }
-  }
 
   .title {
     font-family: "NotoSansTC" !important;
   }
-  .form {
-    padding-bottom: 0;
-    .input {
-      width: 300px !important;
+}
+
+.tab {
+  &__button {
+    width: 120px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 5px;
+    color: rgba(0, 0, 0, 0.87);
+    text-decoration: none;
+  }
+  &__button--active {
+    background-color: #333333;
+    border-radius: 10px;
+    color: white;
+  }
+  &__button__login::after {
+    content: "";
+    width: 2px;
+    height: 55px;
+    background-color: #333333;
+    position: relative;
+    right: -61px;
+    top: 0;
+  }
+}
+
+.form {
+  padding-bottom: 0;
+  &__item {
+    position: relative;
+    margin-bottom: 10px;
+    &__input {
+      width: 300px;
     }
-    .input_container {
-      position: relative;
-      margin-bottom: 10px;
-      .null_remind {
-        color: #d87355;
-        width: 300px;
-        position: absolute;
-        top: 60px;
-        left: 25px;
-      }
+    &--error {
+      color: #d87355;
+      width: 300px;
+      position: absolute;
+      top: 60px;
+      left: 25px;
     }
   }
 }
