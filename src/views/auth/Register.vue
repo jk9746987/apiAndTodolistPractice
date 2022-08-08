@@ -20,10 +20,9 @@
             <span class="auth_button choice">註冊帳號</span>
           </div>
         </div>
-        <form class="form">
+        <div class="form">
           <div class="input_container">
             <v-text-field
-              autocomplete="off"
               background-color="white"
               class="input rounded-lg mx-auto"
               label="Email"
@@ -35,7 +34,6 @@
           </div>
           <div class="input_container">
             <v-text-field
-              autocomplete="off"
               background-color="white"
               class="input rounded-lg mx-auto"
               label="您的暱稱"
@@ -47,7 +45,6 @@
           </div>
           <div class="input_container">
             <v-text-field
-              autocomplete="off"
               background-color="white"
               filled
               clearable
@@ -65,7 +62,6 @@
           </div>
           <div class="input_container">
             <v-text-field
-              autocomplete="off"
               background-color="white"
               filled
               clearable
@@ -79,7 +75,7 @@
             ></v-text-field>
             <div class="null_remind mx-auto">{{ error.again }}</div>
           </div>
-        </form>
+        </div>
         <div class="col-12 d-flex justify-center">
           <v-btn
             class="white--text rounded-lg"
