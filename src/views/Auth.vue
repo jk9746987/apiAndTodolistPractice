@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="d-flex justify-center align-center">
+  <div id="auth" class="d-flex justify-center align-center">
     <v-row class="col-6 d-none d-md-flex justify-center align-center flex-wrap">
       <v-col class="col-12">
         <v-img
@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#app {
+#auth {
   min-height: 100%;
 }
 </style>

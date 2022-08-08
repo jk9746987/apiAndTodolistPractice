@@ -10,30 +10,32 @@
         <div class="mb-4 text-h5 title text-center col-12">
           線上代辦事項紀錄
         </div>
-        <div class="tab_container col-12 mb-4 d-flex justify-center">
+        <div class="tab col-12 mb-4 d-flex justify-center">
           <div class="d-flex justify-center pr-3">
-            <span class="auth_button btn_login choice">登入</span>
+            <span class="tab__button tab__button__login tab__button--active"
+              >登入</span
+            >
           </div>
           <div class="d-flex justify-center pl-3">
-            <router-link :to="{ name: 'Register' }" class="auth_button"
+            <router-link :to="{ name: 'Register' }" class="tab__button"
               >註冊帳號</router-link
             >
           </div>
         </div>
         <v-form class="form">
-          <div class="input_container">
+          <div class="form__item">
             <v-text-field
               autocomplete="off"
               background-color="white"
-              class="input rounded-lg mx-auto"
+              class="form__item__input rounded-lg mx-auto"
               label="Email"
               v-model="login.email"
               filled
               clearable
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ error.email }}</div>
+            <div class="form__item--error mx-auto">{{ error.email }}</div>
           </div>
-          <div class="input_container">
+          <div class="form__item">
             <v-text-field
               autocomplete="off"
               background-color="white"
@@ -43,11 +45,11 @@
               :append-icon="loginPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
               :type="loginPasswordShow ? 'text' : 'password'"
               label="密碼"
-              class="input rounded-lg mx-auto"
+              class="form__item__input rounded-lg mx-auto"
               @click:append="loginPasswordShow = !loginPasswordShow"
               placeholder="不可小於6碼"
             ></v-text-field>
-            <div class="null_remind mx-auto">{{ error.password }}</div>
+            <div class="form__item--error mx-auto">{{ error.password }}</div>
           </div>
         </v-form>
         <div class="col-12 d-flex justify-center">
@@ -155,52 +157,54 @@ export default {
 
 .auth_container {
   height: 650px;
-  .tab_container {
-    .auth_button {
-      width: 120px;
-      height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      margin: 5px;
-      color: rgba(0, 0, 0, 0.87);
-      text-decoration: none;
-    }
-    .choice {
-      background-color: #333333;
-      border-radius: 10px;
-      color: white;
-    }
-    .btn_login::after {
-      content: "";
-      width: 2px;
-      height: 55px;
-      background-color: #333333;
-      position: relative;
-      right: -61px;
-      top: 0;
-    }
-  }
 
   .title {
     font-family: "NotoSansTC" !important;
   }
-  .form {
-    padding-bottom: 0;
-    .input {
-      width: 300px !important;
+}
+
+.tab {
+  &__button {
+    width: 120px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 5px;
+    color: rgba(0, 0, 0, 0.87);
+    text-decoration: none;
+  }
+  &__button--active {
+    background-color: #333333;
+    border-radius: 10px;
+    color: white;
+  }
+  &__button__login::after {
+    content: "";
+    width: 2px;
+    height: 55px;
+    background-color: #333333;
+    position: relative;
+    right: -61px;
+    top: 0;
+  }
+}
+
+.form {
+  padding-bottom: 0;
+  &__item {
+    position: relative;
+    margin-bottom: 10px;
+    &__input {
+      width: 300px;
     }
-    .input_container {
-      position: relative;
-      margin-bottom: 10px;
-      .null_remind {
-        color: #d87355;
-        width: 300px;
-        position: absolute;
-        top: 60px;
-        left: 25px;
-      }
+    &--error {
+      color: #d87355;
+      width: 300px;
+      position: absolute;
+      top: 60px;
+      left: 25px;
     }
   }
 }
