@@ -10,6 +10,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
+Vue.config.devtools = true;
 
 Vue.use(Loading);
 
